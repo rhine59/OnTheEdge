@@ -2,7 +2,7 @@
 
 ![Edge Computing Title](images/2020/01/edge-computing-title.png)
 
-<!-- TOC -->
+<!-- TOC --> 
 
 - [Edge Device Lab](#edge-device-lab)
   - [WARNING](#warning)
