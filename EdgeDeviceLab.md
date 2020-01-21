@@ -5,6 +5,7 @@
 <!-- TOC -->
 
 - [Edge Device Lab](#edge-device-lab)
+  - [WARNING](#warning)
   - [Connect to the Edge Hub Environment](#connect-to-the-edge-hub-environment)
   - [Connect to the Edge Device environment.](#connect-to-the-edge-device-environment)
   - [Setup the environment in your Device VM](#setup-the-environment-in-your-device-vm)
@@ -18,7 +19,7 @@
   - [Creating new Edge Services](#creating-new-edge-services)
     - [Build Edge service metadata](#build-edge-service-metadata)
     - [Publish our new Edge service](#publish-our-new-edge-service)
-    - [Create policies to link Device Nodes to Edge services.](#create-policies-to-link-device-nodes-to-edge-services)
+    - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
     - [Summary](#summary)
   - [Re mission our Edge Device](#re-mission-our-edge-device)
   - [Diagnostics - for interest](#diagnostics---for-interest)
@@ -40,7 +41,7 @@ The details of the Edge hub server are here.
 
 After you have authenticated to the Edge Hub Server, you will need to navigate to the Edge management console via `Hamburger Menu` > `Edge Computing`
 
-Credentials for the Edge Hub Server are `admin / grey-hound-red-cardinal`
+Credentials for the IBM Edge Computing Manager hub server are **userXX / ReallyStrongPassw0rd**. You will be assigned number between 01 and 50 by lab instructors.
 
 ## Connect to the Edge Device environment.
 
