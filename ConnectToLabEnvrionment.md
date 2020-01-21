@@ -2,13 +2,13 @@
 
 [Go back to the Table of Contents](./README.md)
 
-For the FastStart 2020 labs related to the IBM Edge Computing Manager you will be using the central Hub server installed in IBM Cloud. This environment is setup to be multi-tenant where each student has their own userid.  Each student will have their own managed edge cluster in Skytap that you will manage from the centralized Hub server.
+For the FastStart 2020 labs related to the IBM Edge Computing Manager, you will be using the central Hub server installed in IBM Cloud. This environment is setup to be multi-tenant where each student has their own userid.  Each student will have their own managed edge cluster in Skytap that you will manage from the centralized Hub server.
 
 <table border="1">
 <tr><th colspan="3">Access credentials</th></tr>
 <tr><th>Interface</th><th>Username</th><th>Password</th></tr>
 <tr><td>IBM Edge Computing Manager User Interface</td><td>assigned to you by lab instructor (<b>userXX</b>)</td><td><b>ReallyStrongPassw0rd</b></td></tr>
-<tr><td>managed-cluster VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
+<tr><td>edge-server VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
 </table>
 
 ## Connecting to the IBM CloudPak for Multicloud Management Hub
@@ -35,9 +35,9 @@ Verify that the environment was started. Click **Launch Lab** link on the left.
 
 ![](images/2020-01-20-14-16-12.png)
 
-If the managed cluster VM is not running start it clicking **Play** button. You can ignore the dev-workstation VM - it won't be used in this lab
+If the managed cluster VM is not running start it clicking **Play** button. 
 
-![](images/2020-01-20-14-18-17.png)
+![](2020-01-21-22-45-24.png)
 
 <span style="color:red">**IT IS NOT RECOMMENDED TO USE SKYTAP UI TO CONNECT TO THE MACHINE - YOU WILL USE A TERMINAL CONNECTION DIRECTLY FROM YOUR WORKSTATION**</span>
 
@@ -45,7 +45,7 @@ You should see the page that looks like this
 
 ![](images/2020-01-20-13-55-03.png)
 
-Take a note of address and the port number, next to the **managed-cluster** VM. In above example, it is *services-uscentral.skytap.com* and *12316*. It is the SSH port exposed from the virtal machine for your instance.
+Take a note of address and the port number, next to the **edge-server** VM. In above example, it is *services-uscentral.skytap.com* and *12316*. It is the SSH port exposed from the virtal machine for your instance.
 
 Open the terminal on your workstation. Connect to the VM using user **localuser** with password **passw0rd**
 

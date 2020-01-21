@@ -71,18 +71,18 @@ Start both of your SkyTap VMs now to allow them to initialise.
 
 0. [Connecting to the Lab environment](./ConnectToLabEnvrionment.md)
 
-1. [A Tour of the Edge web console](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/ConsoleTour.md)
+1. [A Tour of the Edge web console](./ConsoleTour.md)
 
-2. [Edge Device Storyboard](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/EdgeDeviceStoryboard.md)
-3. [Edge Device Lab](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/EdgeDeviceLab.md)
+2. [Edge Device Storyboard](./EdgeDeviceStoryboard.md)
+3. [Edge Device Lab](./EdgeDeviceLab.md)
 
 
-4. [Edge Server Storyboard](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/EdgeServerStoryboard.md)
-5. [Edge Server Lab](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/EdgeServerLab.md)
+4. [Edge Server Storyboard](./EdgeServerStoryboard.md)
+5. [Edge Server Lab](./EdgeServerLab.md)
 
 # Optional Activities
 
-1. [Building a development environment on your Mac](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/BuildingDevEnvironment.md)
+1. [Building a development environment on your Mac](./BuildingDevEnvironment.md)
 
 # ToDo
 
