@@ -68,6 +68,8 @@ Start both of your SkyTap VMs now to allow them to initialise.
 
 # Cookbook Index
 
+0. [Connecting to the Lab environment](./ConnectToLabEnvrionment.md)
+
 1. [A Tour of the Edge web console](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/ConsoleTour.md)
 
 2. [Edge Device Storyboard](https://github.ibm.com/Richard-Hine/OnTheEdge/blob/master/EdgeDeviceStoryboard.md)
