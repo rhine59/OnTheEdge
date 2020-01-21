@@ -63,9 +63,8 @@ Start both of your SkyTap VMs now to allow them to initialise.
 
 # Assumed prerequisites
 
-1. A SkyTap Account
-2. A Mac or Linux based desktop. If you are a Windows user then find a suitable team member.
-3. Basic command line Linux skills
+1. A Mac or Linux based desktop. If you are a Windows user then find a suitable team member.
+2. Basic command line Linux skills
 
 # Cookbook Index
 
