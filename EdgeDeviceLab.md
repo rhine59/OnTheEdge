@@ -22,6 +22,7 @@
     - [Build Edge service metadata](#build-edge-service-metadata)
     - [Publish the new Edge service](#publish-the-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
+    - [Service networking](#service-networking)
     - [Summary](#summary)
   - [Diagnostics - for interest](#diagnostics---for-interest)
   - [Optional background steps](#optional-background-steps)
@@ -571,16 +572,16 @@ Make your userid a part of the `service` name to make it unique! Add your assign
 ```
 cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
 source /etc/default/horizon
-hzn dev service new -s user01-service-scale -i "acmegrocery/scales_amd64"
+hzn dev service new -s user01-smartscale-service -i "acmegrocery/scales_amd64"
 Created image generation files in /home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service and horizon metadata files in /home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service/horizon. Edit these files to define and configure your new service.
 ```
 You will need to change these generated files - read on!
 
 We have already built the docker images for this exercise and placed them in docker hub. If you want to look at the source code and the build scripts, then look in the `build` directory under each of the service directories.
 
-Modify `hzn.json` to use the appropriate docker image and change the `service.definition.json` file to pick the docker image.
+Modify `hzn.json` to use the appropriate docker image and change the `service.definition.json` file to pick the docker image tag.
 
-Later on, if you are going to experiment with service upgrades, you can change the version, now stick with `v1`.
+Later on, if you are going to experiment with service upgrades, you can change the tags, but for now, stick with `v1`.
 
 ![](2020-01-22-22-17-41.png)
 
@@ -654,7 +655,7 @@ Service policy added for service: fs20edgem/user01-service-scale_1.0.0_amd64
 
 Optionally, you can repeat this process for to create a V2 of the service. You need to publish a `V1` and a `V2` version of the service if you would like to explore upgrading services on Edge Devices.
 
-All these directories are relative to the `EdgeLabStudentFiles` directory created by the `git clone`.
+You may optionally chose to publish a `V1` and a `V2` version of each service if you would like to explore upgrading services on Edge Devices.
 
 ```
 Directory                         | Service                      | Version | Image    | Tags    | Port | Mapped to |
@@ -709,6 +710,8 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-regi
 Select `smartcart` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` `is equal to` `userXX`.
 
 ![](2020-01-22-23-14-50.png)
+
+and select `user` ..... `is equal to` ...... `userXX` where `XX` is your userid. In this way, the `service` that you created will now bind to your `node`. Take a minute to understand this.
 
 Just select `Next` to continue
 
@@ -768,7 +771,9 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ h
 ]
 
 ```
-So we have deployed the `battery` and the `smartcart` services.
+So we have deployed the `battery` and the `smartcart` services when we initially registered the `device`, but now that we have a new `service` and a new `node` property, we should have 3 services running on the node, and three containers running.
+
+Use the `hzn`, `docker` `netstat` and `curl` commands to investigate.
 
 Look for the running Docker containers ...
 
@@ -780,7 +785,7 @@ CONTAINER ID        IMAGE                           COMMAND                  CRE
 ```
 You can see above that we have deployed the 2 docker containers associated with our 2 services.
 
-What about the service networking?
+### Service networking
 
 If you look at the battery container, you see that port `8080` is mapped to all interfaces on the host machine. This means that we can access the battery `service` externally, but NOT the smartcart `service`.
 
