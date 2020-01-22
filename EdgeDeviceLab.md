@@ -585,20 +585,22 @@ Later on, if you are going to experiment with service upgrades, you can change t
 
 ![](2020-01-22-22-17-41.png)
 
-See `hzn.json`
-```
+Edit `~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon/hzn.json` to match the following content
+<pre>
 {
     "HZN_ORG_ID": "fs20edgem",
     "MetadataVars": {
         "DOCKER_IMAGE_BASE": "acmegrocery/scales",
-        "SERVICE_NAME": "smartscale-service",
-        "SERVICE_VERSION": "1.0.0"
+        "SERVICE_NAME": "<span style=color:red>user01</span>-smartscale-service",
+        "SERVICE_VERSION": <b>"1.0.0"</b>
     }
 }
-```
-and `service.definition.json`
+</pre>
 
-```
+
+Edit `~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon/service.definition.json` to match the following content
+
+<pre>
 {
     "org": "$HZN_ORG_ID",
     "label": "$SERVICE_NAME for $ARCH",
@@ -613,7 +615,7 @@ and `service.definition.json`
     "userInput": [],
     "deployment": {
         "services": {
-            "smartscale-service": {
+            "<span style=color:red>user01</span>-smartscale-service": {
                 "image": "${DOCKER_IMAGE_BASE}:v1",
                 "privileged": false
             }
@@ -621,9 +623,17 @@ and `service.definition.json`
     }
 }
 
+</pre>
+
+Make sure that userXX matches your userid.
+
+As the service policy does not have to be unique, copy the file that we provided you with the following command
+```
+cp ~/EdgeLabStudentFiles/smartscale/smartscale-service/service.policy.json \
+~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
 ```
 
-### Publish our new Edge service
+### Publish the new Edge service
 
 We now need to publish this new service to the IBM Edge Computing Manager hub
 
