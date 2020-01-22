@@ -20,7 +20,7 @@
   - [Congrartulations! Your smartcart device is ready to go!](#congrartulations-your-smartcart-device-is-ready-to-go)
   - [Re-registering the node as smartscale](#re-registering-the-node-as-smartscale)
     - [Build Edge service metadata](#build-edge-service-metadata)
-    - [Publish our new Edge service](#publish-our-new-edge-service)
+    - [Publish the new Edge service](#publish-the-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
     - [Summary](#summary)
   - [Diagnostics - for interest](#diagnostics---for-interest)
@@ -624,7 +624,7 @@ Edit `~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon/service.defini
 
 </pre>
 
-Make sure that userXX matches your userid.
+Make sure that **userXX** matches your userid.
 
 As the service policy does not have to be unique, copy the file that we provided you with the following command
 ```
@@ -637,20 +637,22 @@ cp ~/EdgeLabStudentFiles/smartscale/smartscale-service/service.policy.json \
 We now need to publish this new service to the IBM Edge Computing Manager hub
 
 ```
-cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
+cd ~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
 
 hzn exchange service publish -O -I -f service.definition.json -p service.policy.json -v
 
 SOME LINES REMOVED BELOW.
 
-Creating battery-service_1.0.0_amd64 in the exchange...
+Creating user01-service-scale_1.0.0_amd64 in the exchange...
 If you haven't already, push your docker images to the registry:
-  docker push acmegrocery/battey_amd64:v1
-Adding service policy for service: fs20edgem/battery-service_1.0.0_amd64
-Updating Service policy  and re-evaluating all agreements based on this Service policy added for service: fs20edgem/battery-service_1.0.0_amd64
+  docker push acmegrocery/scales_amd64:v1
+Adding service policy for service: fs20edgem/user01-service-scale_1.0.0_amd64
+Updating Service policy  and re-evaluating all agreements based on this Service policy. Existing agreements might be cancelled and re-negotiated.
+Service policy updated.
+Service policy added for service: fs20edgem/user01-service-scale_1.0.0_amd64
 ```
 
-You can repeat this process for all 3 Services using the information below. You may chose to publish a `V1` and a `V2` version of each service if you would like to explore upgrading services on Edge Devices.
+Optionally, you can repeat this process for to create a V2 of the service. You need to publish a `V1` and a `V2` version of the service if you would like to explore upgrading services on Edge Devices.
 
 All these directories are relative to the `EdgeLabStudentFiles` directory created by the `git clone`.
 
@@ -658,75 +660,69 @@ All these directories are relative to the `EdgeLabStudentFiles` directory create
 Directory                         | Service                      | Version | Image    | Tags    | Port | Mapped to |
 ----------------------------------|------------------------------|---------|----------|---------|------|-----------|--
 smartcart/battery-monitor-service | battery-service              | 1.0.0   | battery  | V1 & V2 | 8080 | 2020      |
-smartcart/smartcart-service       | <username>smartcart-service  | 1.0.0   | analysis | V1 & V2 | 8081 | 2021      |
-smartscale/smartscale-service     | <username>smartscale-service | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
+smartcart/smartcart-service       | <userXX>-smartcart-service   | 1.0.0   | analysis | V1 & V2 | 8081 | 2021      |
+smartscale/smartscale-service     | <userXX>-smartscale-service  | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
 ```
 
-We already have the containerised software built and is sitting in DockerHub and earlier in this topic, we created a `service` for this capability. If you skipped this step, then retrace your steps and do it now.
+We already have the containerised software built and waiting in DockerHub and earlier in this topic, we created a `service` for this capability. If you skipped this step, then retrace your steps and do it now.
 
-![scales](images/2020/01/scales.png)
+When complete, have a look in the IBM Edge Computing Manager hub console and you will see your new Service
 
-
-When complete, have a look in the Edge HUB console and you will see your 3 new Services
-
-![three new services](images/2020/01/three-new-services.png)
+![three services](2020-01-22-23-00-45.png)
 
 ### Create policies to link Device Nodes to Edge Services.
 
-You should repeat the following process for all of the `services` that you have created above, binding them with `properties` and `constraints` to your Edge `device`.
+You have created a service definition, now it is time to bind the service to your device.
 
-Open your `battery-service` or `smartcart-service` from the Edge Hub.
+Click `userXX-smartscale-service` in the Edge Hub UI. If you cannot find it in the tile view, switch to the list view or use a `Find service` field.
 
-![battery service](images/2020/01/battery-service.png)
+![](2020-01-22-23-06-54.png)
 
-Under `Deployment Policies` select `Create Deployment Policy`
+In the service details view, scroll down. Under `Deployment Policies` select `Create Deployment Policy`
 
-![smartcart-service](images/2020/01/smartcart-service.png)
+![](2020-01-22-23-09-08.png)
 
-Now create a new deployment policy
+Provide some basic details, policy name (make it unique with your userid) and description
 
-![create deployment policy](images/2020/01/create-deployment-policy.png)
-
-Provide some basic details.
-
-![deployment policy details](images/2020/01/deployment-policy-details.png)
+![](2020-01-22-23-11-49.png)
 
 after selecting `next` we need to provide the `constraints` that bind the nodes to the services.
 
 Remember the node properties attached to when the node was registered?
 
 ```
-localuser@edge-device:~/EdgeLabStudentFiles/smartcart$ cat smartcart-node-registration.json
+localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
 {
     "properties": [   /* A list of policy properties that describe the object. */
-      {"name": "smartcart","value": true},
+      {"name": "smartscale", "value": true},
+      {"name": "user", "value": "userXX"},
       {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
-      {"name": "type", "value": "SmartCart1"}
+      {"name": "type", "value": "SmartScale Video Analytics 1000"}
     ],
     "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
   perators AND (&&) or OR (||). */
-      "purpose == battery-monitor OR purpose == content-monitor"
+      "purpose == battery-monitor OR purpose == image-analysis"
     ]
   }
 ```
 
-Select `smartcart` .... `is equal to` .... `true` as a property.
+Select `smartcart` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` `is equal to` `userXX`.
 
-![smartcart true](images/2020/01/smartcart-true.png)
+![](2020-01-22-23-14-50.png)
 
 Just select `Next` to continue
 
-![policy summary](images/2020/01/policy-summary.png)
+![](2020-01-22-23-15-40.png)
 
-and `Next` again.
+and `Next` again (there is no need to modify anything in this step)
 
 Finally, `Deploy Service`
 
-![deploy service](images/2020/01/deploy-service.png)
+![](2020-01-22-23-16-46.png)
 
-Here is a similar set of constraints for the `battery` service
+Now, let's verify if you haven't made any typo :)
 
-![battery policy constraints](images/2020/01/battery-policy-constraints.png)
+On the edge device run `hzn agreement list`.
 
 After the deployment policy has been completed, look at the details. In particular - check that we have a `time` in the `agreement_execution_start_time` value.
 
