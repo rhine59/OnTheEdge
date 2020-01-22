@@ -172,7 +172,7 @@ OK
 We need to generate a Kubernetes API key that will be used when the horizon agent connects to the hub. Make your key name unique as this is a multi tenant environment.
 
 ```
-localuser@edge-device:~$ cloudctl iam api-key-create user01 -d "FastStart 2020 Edge User01 API Key" -f edge-api-key
+cloudctl iam api-key-create user01 -d "FastStart 2020 Edge User01 API Key" -f edge-api-key
 Creating API key user01 as user01...
 OK
 API key user01 created
@@ -200,7 +200,8 @@ HZN_EXCHANGE_USER_AUTH=iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 Get a certificate from the Edge hub and make it available to agent commands. This certificate is used in the communication from the Edge device agent to the Edge Hub.
 
 ```
-kubectl --namespace kube-system get secret cluster-ca-cert -o jsonpath="{.data['tls\.crt']}" | base64 --decode > /home/localuser/horizon-edge-packages/agent-install.crt
+kubectl --namespace kube-system get secret cluster-ca-cert -o jsonpath="{.data['tls\.crt']}" | \
+base64 --decode > /home/localuser/horizon-edge-packages/agent-install.crt
 ```
 Add a `HZN_DEVICE_ID` variable value to `agent-install.cfg` and make it unique, as this will make it easier to find your device in the Web console.
 
