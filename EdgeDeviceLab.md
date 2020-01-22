@@ -729,36 +729,36 @@ On the edge device run `hzn agreement list`.
 
 After the deployment policy has been completed, look at the details. In particular - check that we have a `time` in the `agreement_execution_start_time` value.
 
-As both the `battery` and the `smartcart` services have the same constraints, you will see one agreement for each service for which you have a matching deployment policy.
+As both the `battery` and the `smartscale` services are matching constraints, you will see one agreement for each service for which you have a matching deployment policy.
 
 ```
 localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ hzn agreement list
 [
   {
-    "name": "Policy for fs20edgem/device1 merged with fs20edgem/smartcart_deployment",
-    "current_agreement_id": "d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260",
+    "name": "Policy for fs20edgem/user01device1 merged with fs20edgem/user01-smartscale-deployment",
+    "current_agreement_id": "21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539",
     "consumer_id": "IBM/fs20edgem-agbot",
-    "agreement_creation_time": "2020-01-22 12:14:57 -0800 PST",
-    "agreement_accepted_time": "2020-01-22 12:15:07 -0800 PST",
-    "agreement_finalized_time": "2020-01-22 12:15:07 -0800 PST",
-    "agreement_execution_start_time": "2020-01-22 12:15:09 -0800 PST",
+    "agreement_creation_time": "2020-01-22 14:26:48 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 14:26:58 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 14:26:58 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 14:27:01 -0800 PST",
     "agreement_data_received_time": "",
     "agreement_protocol": "Basic",
     "workload_to_run": {
-      "url": "smartcart-service",
+      "url": "user01-service-scale",
       "org": "fs20edgem",
       "version": "1.0.0",
       "arch": "amd64"
     }
   },
   {
-    "name": "Policy for fs20edgem/device1 merged with fs20edgem/battery_deployment",
-    "current_agreement_id": "0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b",
+    "name": "Policy for fs20edgem/user01device1 merged with fs20edgem/battery_deployment",
+    "current_agreement_id": "02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c",
     "consumer_id": "IBM/fs20edgem-agbot",
-    "agreement_creation_time": "2020-01-22 13:00:21 -0800 PST",
-    "agreement_accepted_time": "2020-01-22 13:00:31 -0800 PST",
-    "agreement_finalized_time": "2020-01-22 13:00:32 -0800 PST",
-    "agreement_execution_start_time": "2020-01-22 13:00:33 -0800 PST",
+    "agreement_creation_time": "2020-01-22 14:33:39 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 14:33:49 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 14:33:50 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 14:33:52 -0800 PST",
     "agreement_data_received_time": "",
     "agreement_protocol": "Basic",
     "workload_to_run": {
@@ -769,9 +769,8 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ h
     }
   }
 ]
-
 ```
-So we have deployed the `battery` and the `smartcart` services when we initially registered the `device`, but now that we have a new `service` and a new `node` property, we should have 3 services running on the node, and three containers running.
+So we have deployed the `battery` and the `smartcart` services when we initially registered the `device`, but now that we have a new `service` and a new `node` property, we should have `battery` and the `smartscale` running on the node
 
 Use the `hzn`, `docker` `netstat` and `curl` commands to investigate.
 
@@ -779,15 +778,15 @@ Look for the running Docker containers ...
 
 ```
 localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ docker ps
-CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                    NAMES
-7e8532203430        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   11 minutes ago      Up 11 minutes       0.0.0.0:8080->8080/tcp   0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b-battery_service
-7afc6019c0e1        acmegrocery/analysis_amd64:v1   "docker-entrypoint.s…"   About an hour ago   Up About an hour    8081/tcp                 d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260-smartcart-service
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES
+f5a071b31f25        acmegrocery/battery_amd64:v1   "docker-entrypoint.s…"   6 minutes ago       Up 6 minutes        0.0.0.0:8080->8080/tcp   02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c-battery_service
+a7f33de7a84d        acmegrocery/scales_amd64:v1    "docker-entrypoint.s…"   13 minutes ago      Up 13 minutes       8082/tcp                 21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539-user01-smartscale-service
 ```
 You can see above that we have deployed the 2 docker containers associated with our 2 services.
 
 ### Service networking
 
-If you look at the battery container, you see that port `8080` is mapped to all interfaces on the host machine. This means that we can access the battery `service` externally, but NOT the smartcart `service`.
+If you look at the battery container, you see that port `8080` is mapped to all interfaces on the host machine. This means that we can access the battery `service` externally, but NOT the smartscale `service`.
 
 This is controlled in the `service.definition.json` for the `service` in the `deployment` stanza. Have a look [here](https://github.com/open-horizon/anax/blob/master/doc/deployment_string.md) for what else can be controlled.
 
@@ -807,7 +806,7 @@ Connection: keep-alive
 
 V1 battery famous-fun
 
-curl -i localhost:8081
+curl -i localhost:8082
 curl: (7) Failed to connect to localhost port 8081: Connection refused
 ```
 The program source for these containers can be found here.
@@ -816,7 +815,7 @@ The program source for these containers can be found here.
 
 and
 
-[smartcart](https://github.com/rhine59/EdgeLabStudentFiles/tree/master/smartcart/smartcart-service/build)
+[smartscale](https://github.com/rhine59/EdgeLabStudentFiles/tree/master/smartscale/smartscale-service/build)
 
 Take time to understand how we achieved this.
 
@@ -826,26 +825,25 @@ Take some time to investigate and understand the logs.
 
 ```
 localuser@edge-device:~/horizon-edge-packages$ hzn eventlog list
-"2020-01-22 12:14:57:   Node received Proposal message using agreement d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260 for service fs20edgem/smartcart-service from the agbot IBM/fs20edgem-agbot.",
-"2020-01-22 12:15:07:   Agreement reached for service smartcart-service. The agreement id is d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260.",
-"2020-01-22 12:15:07:   Start dependent services for fs20edgem/smartcart-service.",
-"2020-01-22 12:15:07:   Start workload service for fs20edgem/smartcart-service.",
-"2020-01-22 12:15:08:   Image loaded for fs20edgem/smartcart-service.",
-"2020-01-22 12:15:09:   Workload service containers for fs20edgem/smartcart-service are up and running.",
-"2020-01-22 12:55:50:   Node received Cancel message for fs20edgem/battery-service from agbot IBM/fs20edgem-agbot.",
-"2020-01-22 12:55:50:   Complete terminating agreement for battery-service. Termination reason: agreement bot policy changed",
-"2020-01-22 12:55:51:   Workload destroyed for battery-service",
-"2020-01-22 13:00:21:   Node received Proposal message using agreement 0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
-"2020-01-22 13:00:21:   Node received Proposal message using agreement 1002d133e3f11031fec0059178c4a359f54da7e69ca10d4080f3c5a40fa85c3c for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
-"2020-01-22 13:00:21:   Error handling proposal for service fs20edgem/battery-service. Error: Agreement with TsAndCs (Terms And Conditions) name exists, ignoring proposal.",
-"2020-01-22 13:00:31:   Agreement reached for service battery-service. The agreement id is 0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b.",
-"2020-01-22 13:00:31:   Start dependent services for fs20edgem/battery-service.",
-"2020-01-22 13:00:31:   Start workload service for fs20edgem/battery-service.",
-"2020-01-22 13:00:32:   Image loaded for fs20edgem/battery-service.",
-"2020-01-22 13:00:33:   Workload service containers for fs20edgem/battery-service are up and running."
+[
+  "2020-01-22 14:21:03:   Start node configuration/registration for node user01device1.",
+  "2020-01-22 14:21:04:   Complete node configuration/registration for node user01device1.",
+  "2020-01-22 14:26:48:   Node received Proposal message using agreement 21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539 for service fs20edgem/user01-service-scale from the agbot IBM/fs20edgem-agbot.",
+  "2020-01-22 14:26:58:   Agreement reached for service user01-service-scale. The agreement id is 21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539.",
+  "2020-01-22 14:26:58:   Start dependent services for fs20edgem/user01-service-scale.",
+  "2020-01-22 14:26:58:   Start workload service for fs20edgem/user01-service-scale.",
+  "2020-01-22 14:27:01:   Image loaded for fs20edgem/user01-service-scale.",
+  "2020-01-22 14:27:01:   Workload service containers for fs20edgem/user01-service-scale are up and running.",
+  "2020-01-22 14:33:39:   Node received Proposal message using agreement 02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
+  "2020-01-22 14:33:49:   Agreement reached for service battery-service. The agreement id is 02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c.",
+  "2020-01-22 14:33:49:   Start dependent services for fs20edgem/battery-service.",
+  "2020-01-22 14:33:49:   Start workload service for fs20edgem/battery-service.",
+  "2020-01-22 14:33:51:   Image loaded for fs20edgem/battery-service.",
+  "2020-01-22 14:33:52:   Workload service containers for fs20edgem/battery-service are up and running."
+]
 ```
 
-We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our `battery` and `smartcart` is now running on our Edge `node`
+We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our `battery` and `smartscale` is now running on our Edge `node`
 
 ### Summary
 
