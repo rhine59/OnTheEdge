@@ -16,7 +16,7 @@
   - [Defining custom properties, constraints and services.](#defining-custom-properties-constraints-and-services)
   - [Node policies](#node-policies)
   - [Adding cart service properties and constraints to the Edge Device](#adding-cart-service-properties-and-constraints-to-the-edge-device)
-  - [Creating new Edge Services](#creating-new-edge-services)
+  - [Check deployed services](#check-deployed-services)
     - [Build Edge service metadata](#build-edge-service-metadata)
     - [Publish our new Edge service](#publish-our-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
@@ -45,49 +45,7 @@ Credentials for the IBM Edge Computing Manager hub server are **userXX / ReallyS
 
 ## Connect to the Edge Device environment.
 
-We will be using a small virtual machine hosted in SkyTap to operate as our edge device.
-
-Login to [Skytap](https://cloud.skytap.com/) with your existing credentials.
-
-We will build a new `environment` using a pre-existing `template` that will automatically connect to the management server you have just been exploring.
-
-From `Home > Environments > Templates`
-
-![HomeEnvironmentsTemplates](images/2020/01/home-environments-templates.png)
-
-scroll down the templates until you find ....
-
-![EL3](images/2020/01/el3.png)
-
-and from the `List Box` at the right side of the template, select
-
-![Deploy as new environment](images/2020/01/deploy-as-new-environment.png)
-
-this will give you the chance to add your own instance name to the template instance.
-
-Change the instance details to suit your needs. Use the `DO-NOT-DELETE` tag to stop this instance being deleted through regular service housekeeping if this is required.
-
-![Instance Details](images/2020/01/instance-details.png)
-
-`Deploy` your new instance.
-
-Note that you only have a finite number of RAM Hours available per month, so power down the VM instance when not in use.
-
-![RAM Hours](images/2020/01/ram-hours.png)
-
-You will be presented with details of the 2 VMs defined in the template.
-
-![Template VMs](images/2020/01/template-vms.png)
-
-At this stage `Run this VM` for the `edge-device` VM only.
-
-![edge-device](images/2020/01/edge-device.png)
-
-As this VM is powering up, look at the `Networking: Settings` tab for the template.
-
-![networking-settings](images/2020/01/networking-settings.png)
-
-You will see that we have exposed the SSH port `22` for the `edge-device` over port `12366`. Determine which port has been exposed for your `edge-device` SSH service.
+If you haven't done it yet, follow these [instructions](./ConnectToLabEnvrionment.md) 
 
 When your `edge-device` is active, then connect via SSH.
 
@@ -95,7 +53,9 @@ Credentials for the Edge Device VM are `localuser / passw0rd`
 
 ![edge device active](images/2020/01/edge-device-active.png)
 
-From a MAC try
+From a MAC or Linux run the command similar to the following from a local terminal on your workstation
+
+**ATTENTION: Remember to use a port number for you instance of edge-defice VM**
 
 ```
 ssh localuser@services-uscentral.skytap.com -p 12366
@@ -131,7 +91,7 @@ localuser@edge-device:~$
 
 ## Setup the environment in your Device VM
 
-When you start this exercise, there is no Horizon agent registered on this device, but if you need to reset, then run these following 2 command and this will unregister the node from the Edge server and also remove the agent and it's environment artefacts.
+When you start this exercise, there is no Horizon agent installed on this device, but if you need to reset, then run these following 2 command and this will unregister the node from the Edge server and also remove the agent and it's environment artefacts.
 
 ## Optionally clean up old deployments
 
@@ -174,18 +134,26 @@ rm: cannot remove '/etc/default/horizon': No such file or directory
 ```
 ## Prepare to register the Edge device.
 
+Follow the instruction working in the terminal window connected to the edge-device VM.
+
+Binaries for the edge device agent are already copied to your device, you can find them in `~/horizon-edge-packages`
+
+In order to register edge-device VM as a managed edge device you need 2 additional items:
+- api key 
+- CA certificate for the IBM Edge Computing Manager hub environment
+
 `cloudctl` and `kubectl` are already installed in this VM, but if you are working from your own MAC laptop, then you will find the binaries [here](https://169.62.229.212:8443/console/tools/cli). You can of course us your existing workstation if you have the clients installed.
 
 Authenticate to the Kubernetes server hosting the Edge Hub
 
 ```
-localuser@edge-device:~$ cloudctl login -a  https://fs20edgem.169.62.229.212.nip.io:8443 -u admin -p grey-hound-red-cardinal --skip-ssl-validation -n default
+localuser@edge-device:~$ cloudctl login -a  https://fs20edgem.169.62.229.212.nip.io:8443 -u user01 -p ReallyStrongPassw0rd --skip-ssl-validation -n user01
 Authenticating...
 OK
 
 Targeted account fs20edgem Account (id-fs20edgem-account)
 
-Targeted namespace default
+Targeted namespace team01
 
 Configuring kubectl ...
 Property "clusters.fs20edgem" unset.
@@ -204,32 +172,28 @@ OK
 We need to generate a Kubernetes API key that will be used when the horizon agent connects to the hub. Make your key name unique as this is a multi tenant environment.
 
 ```
-localuser@edge-device:~$ cloudctl iam api-key-delete richard_hine -f
-Deleting API key richard_hine as admin...
+localuser@edge-device:~$ cloudctl iam api-key-create user01 -d "FastStart 2020 Edge User01 API Key" -f edge-api-key
+Creating API key user01 as user01...
 OK
-API key richard_hine ApiKey-fa794939-662b-49ed-8ccc-29c828a91e85 deleted
-
-localuser@edge-device:~$ cloudctl iam api-key-create richard_hine -d "FastStart 2020 Edge API Key" -f edge-api-key
-Creating API key richard_hine as admin...
-OK
-API key richard_hine created
+API key user01 created
 Successfully saved API key information to edge-api-key
 
 localuser@edge-device:~$ cat edge-api-key
 {
-	"name": "richard_hine",
-	"description": "FastStart 2020 Edge API Key",
+	"name": "user01",
+	"description": "FastStart 2020 Edge User01 API Key",
 	"apikey": "iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9",
 	"createdAt": "2020-01-10T13:17+0000"
 }
 
 ```
-Take the `apikey` value from the `edge-api-key` file and update the `HZN_EXCHANGE_USER_AUTH` variable value in `agent-install.cfg`
+Take the `apikey` value from the `edge-api-key` file and update the `HZN_EXCHANGE_USER_AUTH` variable value in `agent-install.cfg` located in `horizon-edge-packages` directory.
 
 something like ...
 
 ```
 HZN_EXCHANGE_USER_AUTH=iamapikey:<your key>
+e.g.
 HZN_EXCHANGE_USER_AUTH=iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 ```
 
@@ -247,9 +211,11 @@ localuser@edge-device:~/horizon-edge-packages$ cat agent-install.cfg
 HZN_EXCHANGE_URL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-exchange/v1
 HZN_FSS_CSSURL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-css
 HZN_ORG_ID=fs20edgem
-HZN_DEVICE_ID=device1
+HZN_DEVICE_ID=user01device1
 HZN_EXCHANGE_USER_AUTH=iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 ```
+<span style="color:red">ATTENTION: Make sure that you precede your API key with `'iamapikey:'`</span>
+
 copy this file to `/etc/default/horizon` to provide system wide defaults.
 
 `sudo cp agent-install.cfg /etc/default/horizon`
@@ -285,16 +251,16 @@ EXTRACT FOLLOWS, SOME LINES DELETED
 2020-01-10 05:48:24 Generated node token is
 OwygvdzYd0GhS27ZcIYTUxFEo0g4luX1lduniCLzQCZXF
 2020-01-10 05:48:24 Creating a node...
-+ hzn exchange node create -n device1:OwygvdzYd0GhS27ZcIYTUxFEo0g4luX1lduniCLzQCZXF -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
++ hzn exchange node create -n user01device1:OwygvdzYd0GhS27ZcIYTUxFEo0g4luX1lduniCLzQCZXF -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 + set +x
 2020-01-10 05:48:24 Verifying a node...
 + hzn exchange node confirm -n device1:OwygvdzYd0GhS27ZcIYTUxFEo0g4luX1lduniCLzQCZXF -o fs20edgem
 Node id and token are valid.
 + set +x
 2020-01-10 05:48:24 Registering node...
-+ hzn register -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9 -n device1:OwygvdzYd0GhS27ZcIYTUxFEo0g4luX1lduniCLzQCZXF
++ hzn register -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9 -n user01device1:OwygvdzYd0GhS27ZcIYTUxFEo0g4luX1lduniCLzQCZXF
 Horizon Exchange base URL: https://fs20edgem.169.62.229.212.nip.io:8443/ec-exchange/v1
-Node fs20edgem/device1 exists in the exchange
+Node fs20edgem/user01device1 exists in the exchange
 No pattern or node policy is specified. Will proceed with the existing node policy.
 Initializing the Horizon node...
 Warning: no input file was specified. This is only valid if none of the services need variables set (including GPS coordinates).
@@ -310,17 +276,17 @@ hzn agreement list
 ```
 Check in the Hub that your device has been registered OK
 
-![registered device](images/2020/01/registered-device.png)
+![registered device](2020-01-22-14-43-58.png)
 
 Note also that when you explore the device node details from the hub GUI that there are no constraints and we only have simple properties.
 
-![device details](images/2020/01/device-details.png)
+![device details](2020-01-22-14-45-11.png)
 
 ## Optional - Exploring the Edge Device configuration
 
 Agent installation packages
 
-`tree` is not installed by default. If you need it, then `apt install -y tree` will complete an installation.
+`tree` is not installed by default. If you need it, then `sudo apt install -y tree` will complete an installation.
 
 ```
 cd /home/localuser/horizon-edge-packages
@@ -361,11 +327,11 @@ explore the `agent-install.cfg` file for the details of the Edge Management serv
 
 ```
 localuser@edge-device:~/horizon-edge-packages$ cat agent-install.cfg
-HZN_EXCHANGE_URL=https://169.61.91.99:8443/ec-exchange/v1
-HZN_FSS_CSSURL=https://169.61.91.99:8443/ec-css
-HZN_ORG_ID=local-cluster
-HZN_EXCHANGE_USER_AUTH=iamapikey:Dq5TwEXqa5OfPng4avBLtirASfkLQEGLXdm6fDJygez8
-HZN_NODE_ID=<your_node_id>
+HZN_EXCHANGE_URL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-exchange/v1
+HZN_FSS_CSSURL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-css
+HZN_ORG_ID=fs20edgem
+HZN_DEVICE_ID=user01device1
+HZN_EXCHANGE_USER_AUTH=iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 ```
 
 We use the Horizon client to interact with our Edge device and it's relationship with the Edge server.
@@ -392,7 +358,7 @@ localuser@edge-device:~/horizon-edge-packages$ hzn status|grep -i status
 ```
 A. All is well.
 
-Q. What `agreements` do we have between the `Edge Server` and the `Edge Device`?
+Q. What `agreements` do we have between the `IBM Edge Computing Manager hub` and the `edge device`?
 ```
 localuser@edge-device:~/horizon-edge-packages$ hzn agreement list
 []
@@ -415,7 +381,7 @@ Cloning into 'EdgeLabStudentFiles'...
 
 ## Adding cart service properties and constraints to the Edge Device
 
-There is no need to unregister the device first, just register using the new JSON node policy file.
+You will use the installation script again, so there is no need to unregister the device first (agent-install.sh does it for you), just run the script again using the new JSON node policy file as a parameter.
 
 `cd ~/horizon-edge-packages`
 
@@ -456,12 +422,12 @@ Horizon node unregistered. You may now run 'hzn register ...' again, if desired.
 2020-01-10 07:04:19 the service is not ready, will retry in 1 second
 2020-01-10 07:04:21 The service is ready
 2020-01-10 07:04:21 Creating a node...
-+ hzn exchange node create -n device1:C0F0UBaw9j5EczK5bhLlDXOaLLp8gjcV9WVdmSA66Y6MP -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
++ hzn exchange node create -n user01device1:C0F0UBaw9j5EczK5bhLlDXOaLLp8gjcV9WVdmSA66Y6MP -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 2020-01-10 07:04:21 Verifying a node...
-+ hzn exchange node confirm -n device1:C0F0UBaw9j5EczK5bhLlDXOaLLp8gjcV9WVdmSA66Y6MP -o fs20edgem
++ hzn exchange node confirm -n user01device1:C0F0UBaw9j5EczK5bhLlDXOaLLp8gjcV9WVdmSA66Y6MP -o fs20edgem
 Node id and token are valid.
 2020-01-10 07:04:22 Registering node...
-+ hzn register -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9 -n device1:C0F0UBaw9j5EczK5bhLlDXOaLLp8gjcV9WVdmSA66Y6MP --policy ../EdgeLabStudentFiles/smartcart/smartcart-node-registration.json
++ hzn register -m edge-device -o fs20edgem -u iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9 -n user01device1:C0F0UBaw9j5EczK5bhLlDXOaLLp8gjcV9WVdmSA66Y6MP --policy ../EdgeLabStudentFiles/smartcart/smartcart-node-registration.json
 Node fs20edgem/device1 exists in the exchange
 Will proceeed with the given node policy.
 Updating the node policy...
@@ -470,11 +436,14 @@ Horizon node is registered. Workload agreement negotiation should begin shortly.
 ```
 Success again - check the details of your node in the Edge Hub GUI and note the `properties ` and `constraints`
 
-**NOTE** We could have used the `hzn register` command instead of the `agent-install.sh` command.
+**NOTE** We could have used the `hzn register` command instead of the `agent-install.sh` command. You will use that method later.
 
-![updated node properties](images/2020/01/updated-node-properties.png)
+![updated node properties](2020-01-22-15-01-54.png)
 
-## Creating new Edge Services
+## Check deployed services
+
+WLODEK working here
+
 
 We are now going to create new services based on docker images that have already been loaded into GitHub as below.
 
@@ -484,12 +453,12 @@ We will use these for our Edge service rather than spend the time creating new o
 
 ### Build Edge service metadata
 
-Create some keys so that we can sign our work. These can be anything you require, so suggest that you use `IBM` and `<your_name>` in the place of `organisation` and `unit.`
+Create a key pair so that we can sign our work. These can be anything you require, so suggest that you use `fs20edgem` and `<your_userid>` in the place of `organisation` and `unit.`
 
-change `hzn key create "organisation" "unit"` to something like `hzn key create "IBM" "<your_name>"` and execute ...
+change `hzn key create "organisation" "unit"` to something like `hzn key create "fs20edgem" "<your_userid>"` and execute ...
 
 ```
-hzn key create "IBM" "richard_hine"`
+hzn key create "fs20edgem" "user01"`
 
 Creating RSA PSS private and public keys, and an x509 certificate for distribution. This is a CPU-intensive operation and, depending on key length and platform, may take a while. Key generation on an amd64 or ppc64 system using the default key length will complete in less than 1 minute.
 Created keys:
