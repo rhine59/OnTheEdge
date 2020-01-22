@@ -72,7 +72,7 @@ Start both of your SkyTap VMs now to allow them to initialise.
 
 0. [Connecting to the Lab environment](./ConnectToLabEnvrionment.md)
 
-1. [A Tour of the Edge web console](./ConsoleTour.md)
+1. [A Tour of the Edge web console](https://www.ibm.com/cloud/garage/dte/producttour/ibm-edge-computing-product-tour)
 
 2. [Edge Device Storyboard](./EdgeDeviceStoryboard.md)
 3. [Edge Device Lab](./EdgeDeviceLab.md)
