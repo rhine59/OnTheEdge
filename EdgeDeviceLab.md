@@ -513,11 +513,10 @@ Look at the `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-node-regi
 localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
 {
     "properties": [   /* A list of policy properties that describe the object. */
-      {"name": "smartscale","value": true},
-      {"name": "user","value": "userXX"},
+      {"name": "smartscale", "value": true},
+      {"name": "user", "value": "userXX"},
       {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
-      {"name": "type", "value": "SmartScale Video Analytics 1000"},
-      {"user": "userXX"}
+      {"name": "type", "value": "SmartScale Video Analytics 1000"}
     ],
     "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
   perators AND (&&) or OR (||). */
@@ -539,9 +538,8 @@ Check the attributes of the `device` from the IBM Edge Computing Manager user in
 Use what you have already learned to create, investigate and diagnose
 
 1. What are the new agreements established between the Edge Server and the Edge Device ?
-2. Why has my `smartcart-service` been removed from my `device` ?
+2. Why has my `smartcart-service` still running on my `device` ?
 3. Why is the `battery-service` still running on my `device` ?
-
 
 For the sake of time, we are now going to create new service based on docker images that have already been loaded into DockerHub as below. You can find the detailed instruction on building a docker images for edge computing [here](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/CreateService.md#build-publish-your-hw)
 
