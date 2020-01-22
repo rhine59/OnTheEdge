@@ -514,6 +514,7 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-regi
 {
     "properties": [   /* A list of policy properties that describe the object. */
       {"name": "smartscale","value": true},
+      {"name": "user","value": "userXX"},
       {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
       {"name": "type", "value": "SmartScale Video Analytics 1000"},
       {"user": "userXX"}
