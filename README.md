@@ -18,6 +18,7 @@ Faststart 2020 lab materials providing an introduction to IBM Edge Computing
 - [ToDo](#todo)
 
 <!-- /TOC -->
+
 # Learning Objectives
 
 - Showcase IBM Edge Capabilities to manage both edge servers and devices
