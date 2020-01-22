@@ -2,7 +2,7 @@
 
 ![Edge Computing Title](images/2020/01/edge-computing-title.png)
 
-<!-- TOC --> 
+<!-- TOC -->
 
 - [Edge Device Lab](#edge-device-lab)
   - [WARNING](#warning)
@@ -46,7 +46,7 @@ Credentials for the IBM Edge Computing Manager hub server are **userXX / ReallyS
 
 ## Connect to the Edge Device environment.
 
-If you haven't done it yet, follow these [instructions](./ConnectToLabEnvrionment.md) 
+If you haven't done it yet, follow these [instructions](./ConnectToLabEnvrionment.md)
 
 When your `edge-device` is active, then connect via SSH.
 
@@ -140,7 +140,7 @@ Follow the instruction working in the terminal window connected to the edge-devi
 Binaries for the edge device agent are already copied to your device, you can find them in `~/horizon-edge-packages`
 
 In order to register edge-device VM as a managed edge device you need 2 additional items:
-- api key 
+- api key
 - CA certificate for the IBM Edge Computing Manager hub environment
 
 `cloudctl` and `kubectl` are already installed in this VM, but if you are working from your own MAC laptop, then you will find the binaries [here](https://169.62.229.212:8443/console/tools/cli). You can of course us your existing workstation if you have the clients installed.
@@ -513,10 +513,10 @@ Look at the `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-node-regi
 localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
 {
     "properties": [   /* A list of policy properties that describe the object. */
-      {"name": "smartscale","value": true},
+      {"name": "smartscale", "value": true},
+      {"name": "user", "value": "userXX"},
       {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
-      {"name": "type", "value": "SmartScale Video Analytics 1000"},
-      {"user": "userXX"}
+      {"name": "type", "value": "SmartScale Video Analytics 1000"}
     ],
     "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
   perators AND (&&) or OR (||). */
@@ -538,9 +538,8 @@ Check the attributes of the `device` from the IBM Edge Computing Manager user in
 Use what you have already learned to create, investigate and diagnose
 
 1. What are the new agreements established between the Edge Server and the Edge Device ?
-2. Why has my `smartcart-service` been removed from my `device` ?
+2. Why has my `smartcart-service` still running on my `device` ?
 3. Why is the `battery-service` still running on my `device` ?
-
 
 For the sake of time, we are now going to create new service based on docker images that have already been loaded into DockerHub as below. You can find the detailed instruction on building a docker images for edge computing [here](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/CreateService.md#build-publish-your-hw)
 
@@ -734,16 +733,33 @@ After the deployment policy has been completed, look at the details. In particul
 As both the `battery` and the `smartcart` services have the same constraints, you will see one agreement for each service for which you have a matching deployment policy.
 
 ```
-localuser@edge-device:~/horizon-edge-packages$ hzn agreement list
+localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ hzn agreement list
 [
   {
-    "name": "Policy for fs20edgem/device1 merged with fs20edgem/battery_deployment",
-    "current_agreement_id": "3673d4a3b5c5374451844cf18e933a5c44829048a18e442e48dc79c97d2efdc6",
+    "name": "Policy for fs20edgem/device1 merged with fs20edgem/smartcart_deployment",
+    "current_agreement_id": "d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260",
     "consumer_id": "IBM/fs20edgem-agbot",
-    "agreement_creation_time": "2020-01-13 08:37:45 -0800 PST",
-    "agreement_accepted_time": "2020-01-13 08:37:56 -0800 PST",
-    "agreement_finalized_time": "2020-01-13 08:37:56 -0800 PST",
-    "agreement_execution_start_time": "2020-01-13 08:37:58 -0800 PST",
+    "agreement_creation_time": "2020-01-22 12:14:57 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 12:15:07 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 12:15:07 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 12:15:09 -0800 PST",
+    "agreement_data_received_time": "",
+    "agreement_protocol": "Basic",
+    "workload_to_run": {
+      "url": "smartcart-service",
+      "org": "fs20edgem",
+      "version": "1.0.0",
+      "arch": "amd64"
+    }
+  },
+  {
+    "name": "Policy for fs20edgem/device1 merged with fs20edgem/battery_deployment",
+    "current_agreement_id": "0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b",
+    "consumer_id": "IBM/fs20edgem-agbot",
+    "agreement_creation_time": "2020-01-22 13:00:21 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 13:00:31 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 13:00:32 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 13:00:33 -0800 PST",
     "agreement_data_received_time": "",
     "agreement_protocol": "Basic",
     "workload_to_run": {
@@ -754,32 +770,81 @@ localuser@edge-device:~/horizon-edge-packages$ hzn agreement list
     }
   }
 ]
-```
-Look for the running Docker container...
 
 ```
-localuser@edge-device:~/horizon-edge-packages$ docker ps
-CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS               NAMES
-9cf4c7e3870d        acmegrocery/battery_amd64:v1   "docker-entrypoint.s…"   51 seconds ago      Up 50 seconds       8080/tcp            3673d4a3b5c5374451844cf18e933a5c44829048a18e442e48dc79c97d2efdc6-paint-assessment
+So we have deployed the `battery` and the `smartcart` services.
+
+Look for the running Docker containers ...
+
 ```
+localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ docker ps
+CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                    NAMES
+7e8532203430        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   11 minutes ago      Up 11 minutes       0.0.0.0:8080->8080/tcp   0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b-battery_service
+7afc6019c0e1        acmegrocery/analysis_amd64:v1   "docker-entrypoint.s…"   About an hour ago   Up About an hour    8081/tcp                 d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260-smartcart-service
+```
+You can see above that we have deployed the 2 docker containers associated with our 2 services.
+
+What about the service networking?
+
+If you look at the battery container, you see that port `8080` is mapped to all interfaces on the host machine. This means that we can access the battery `service` externally, but NOT the smartcart `service`.
+
+This is controlled in the `service.definition.json` for the `service` in the `deployment` stanza. Have a look [here](https://github.com/open-horizon/anax/blob/master/doc/deployment_string.md) for what else can be controlled.
+
+Look at the service definition json files for the `battery` and the `smartcart` services to understand how we have defined them differently.
+
+If I try to connect to the port for the 2 services externally, you will see the difference
+
+```
+curl -i localhost:8080
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 22
+ETag: W/"16-6FkC70SDuBHHlB6EaeGUaipvwbA"
+Date: Wed, 22 Jan 2020 21:21:44 GMT
+Connection: keep-alive
+
+V1 battery famous-fun
+
+curl -i localhost:8081
+curl: (7) Failed to connect to localhost port 8081: Connection refused
+```
+The program source for these containers can be found here.
+
+[battery](https://github.com/rhine59/EdgeLabStudentFiles/tree/master/smartcart/battery-monitor-service/build)
+
+and
+
+[smartcart](https://github.com/rhine59/EdgeLabStudentFiles/tree/master/smartcart/smartcart-service/build)
+
+Take time to understand how we achieved this.
 
 What is happening with our Edge node?
 
+Take some time to investigate and understand the logs.
+
 ```
 localuser@edge-device:~/horizon-edge-packages$ hzn eventlog list
-[
-  "2020-01-13 08:37:45:   Node received Proposal message using agreement 3673d4a3b5c5374451844cf18e933a5c44829048a18e442e48dc79c97d2efdc6 for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
-  "2020-01-13 08:37:46:   Node received Proposal message using agreement 47dc4ab76e3590c6da413c381a3bf1bf7f3dcb9535bd8a40ed25a96de286d8bd for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
-  "2020-01-13 08:37:46:   Error handling proposal for service fs20edgem/battery-service. Error: Agreement with TsAndCs (Terms And Conditions) name exists, ignoring proposal.",
-  "2020-01-13 08:37:56:   Agreement reached for service battery-service. The agreement id is 3673d4a3b5c5374451844cf18e933a5c44829048a18e442e48dc79c97d2efdc6.",
-  "2020-01-13 08:37:56:   Start dependent services for fs20edgem/battery-service.",
-  "2020-01-13 08:37:56:   Start workload service for fs20edgem/battery-service.",
-  "2020-01-13 08:37:57:   Image loaded for fs20edgem/battery-service.",
-  "2020-01-13 08:37:58:   Workload service containers for fs20edgem/battery-service are up and running."
-]
+"2020-01-22 12:14:57:   Node received Proposal message using agreement d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260 for service fs20edgem/smartcart-service from the agbot IBM/fs20edgem-agbot.",
+"2020-01-22 12:15:07:   Agreement reached for service smartcart-service. The agreement id is d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260.",
+"2020-01-22 12:15:07:   Start dependent services for fs20edgem/smartcart-service.",
+"2020-01-22 12:15:07:   Start workload service for fs20edgem/smartcart-service.",
+"2020-01-22 12:15:08:   Image loaded for fs20edgem/smartcart-service.",
+"2020-01-22 12:15:09:   Workload service containers for fs20edgem/smartcart-service are up and running.",
+"2020-01-22 12:55:50:   Node received Cancel message for fs20edgem/battery-service from agbot IBM/fs20edgem-agbot.",
+"2020-01-22 12:55:50:   Complete terminating agreement for battery-service. Termination reason: agreement bot policy changed",
+"2020-01-22 12:55:51:   Workload destroyed for battery-service",
+"2020-01-22 13:00:21:   Node received Proposal message using agreement 0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
+"2020-01-22 13:00:21:   Node received Proposal message using agreement 1002d133e3f11031fec0059178c4a359f54da7e69ca10d4080f3c5a40fa85c3c for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
+"2020-01-22 13:00:21:   Error handling proposal for service fs20edgem/battery-service. Error: Agreement with TsAndCs (Terms And Conditions) name exists, ignoring proposal.",
+"2020-01-22 13:00:31:   Agreement reached for service battery-service. The agreement id is 0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b.",
+"2020-01-22 13:00:31:   Start dependent services for fs20edgem/battery-service.",
+"2020-01-22 13:00:31:   Start workload service for fs20edgem/battery-service.",
+"2020-01-22 13:00:32:   Image loaded for fs20edgem/battery-service.",
+"2020-01-22 13:00:33:   Workload service containers for fs20edgem/battery-service are up and running."
 ```
 
-We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our batter-service is now running on our Edge `node`
+We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our `battery` and `smartcart` is now running on our Edge `node`
 
 ### Summary
 
