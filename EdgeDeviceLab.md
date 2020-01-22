@@ -17,11 +17,12 @@
   - [Node policies](#node-policies)
   - [Adding cart service properties and constraints to the Edge Device](#adding-cart-service-properties-and-constraints-to-the-edge-device)
   - [Check deployed services](#check-deployed-services)
+  - [Congrartulations! Your smartcart device is ready to go!](#congrartulations-your-smartcart-device-is-ready-to-go)
+  - [Re-registering the node as smartscale](#re-registering-the-node-as-smartscale)
     - [Build Edge service metadata](#build-edge-service-metadata)
     - [Publish our new Edge service](#publish-our-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
     - [Summary](#summary)
-  - [Re mission our Edge Device](#re-mission-our-edge-device)
   - [Diagnostics - for interest](#diagnostics---for-interest)
   - [Optional background steps](#optional-background-steps)
     - [Build the applications and push into DockerHub](#build-the-applications-and-push-into-dockerhub)
@@ -443,14 +444,109 @@ Success again - check the details of your node in the Edge Hub GUI and note the 
 
 ## Check deployed services
 
-WLODEK working here
+Now, verify what services are running on the device.
+
+```
+hzn agreement list
+[
+  {
+    "name": "Policy for fs20edgem/user01device1 merged with fs20edgem/battery_deployment",
+    "current_agreement_id": "f1b5a6fcde55da5a31be7392d15950d0c4d1662bd3b082370fdd2092f40454b1",
+    "consumer_id": "IBM/fs20edgem-agbot",
+    "agreement_creation_time": "2020-01-22 11:55:19 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 11:55:29 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 11:55:29 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 11:55:30 -0800 PST",
+    "agreement_data_received_time": "",
+    "agreement_protocol": "Basic",
+    "workload_to_run": {
+      "url": "battery-service",
+      "org": "fs20edgem",
+      "version": "1.0.0",
+      "arch": "amd64"
+    }
+  },
+  {
+    "name": "Policy for fs20edgem/user01device1 merged with fs20edgem/smartcart_deployment",
+    "current_agreement_id": "26f52ed4b83164817cd633d69929edc22749893cd26ea01cfa7124c7da3eec85",
+    "consumer_id": "IBM/fs20edgem-agbot",
+    "agreement_creation_time": "2020-01-22 12:14:52 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 12:15:02 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 12:15:03 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 12:15:04 -0800 PST",
+    "agreement_data_received_time": "",
+    "agreement_protocol": "Basic",
+    "workload_to_run": {
+      "url": "smartcart-service",
+      "org": "fs20edgem",
+      "version": "1.0.0",
+      "arch": "amd64"
+    }
+  }
+]
+```
+
+After a while, you should see the two agreements which refelct two services being deployed on the device. Verify that they are actually running with the following command:
+
+```
+docker ps
+CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS               NAMES
+b9f30198fa16        acmegrocery/analysis_amd64:v1   "docker-entrypoint.s…"   8 minutes ago       Up 8 minutes        8081/tcp            26f52ed4b83164817cd633d69929edc22749893cd26ea01cfa7124c7da3eec85-smartcart-service
+b54f692f2003        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   28 minutes ago      Up 28 minutes       8080/tcp            f1b5a6fcde55da5a31be7392d15950d0c4d1662bd3b082370fdd2092f40454b1-battery_service
+```
+
+## Congrartulations! Your smartcart device is ready to go!
+
+Now, let's explore in more details how to build and deploy a service using a smartscale as example. In the real world the smart devices are usually dedicated hardware devices. For our lab we will repurpose the edge-device VM and you will observe
+what happens to agreements and services running on the node.
+
+## Re-registering the node as smartscale
+
+The scenario here is that we now want to run some `intelligent grocery scales` software on our Edge device rather than just running some software that will just keep track of the items purchase in the shopping trolley.
+
+Look at the `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-node-registration.json` file and you will see that `nodes` registered using this file will have two business purposes.
+
+1. To run a `battery-monitor` service
+2. To run an `image-analysis` service
+
+```
+localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
+{
+    "properties": [   /* A list of policy properties that describe the object. */
+      {"name": "smartscale","value": true},
+      {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
+      {"name": "type", "value": "SmartScale Video Analytics 1000"},
+      {"user": "userXX"}
+    ],
+    "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
+  perators AND (&&) or OR (||). */
+      "purpose == battery-monitor OR purpose == image-analysis"
+    ]
+  }
+```
+
+**Important!!! Edit the `smartscale-node-registration.json` and replace `userXX` with your userid!**
+
+So now we will re-register our Edge device with these new properties. We have done this earlier, so I will not include the verbose command output here.
+
+`sudo ./agent-install.sh -l 1 -n ../EdgeLabStudentFiles/smartscale/smartscale-node-registration.json`
+
+Check the attributes of the `device` from the IBM Edge Computing Manager user interface and see how they have changed.
+
+![smartscale properties](images/2020/01/smartscale-properties.png)
+
+Use what you have already learned to create, investigate and diagnose
+
+1. What are the new agreements established between the Edge Server and the Edge Device ?
+2. Why has my `smartcart-service` been removed from my `device` ?
+3. Why is the `battery-service` still running on my `device` ?
 
 
-We are now going to create new services based on docker images that have already been loaded into GitHub as below.
+For the sake of time, we are now going to create new service based on docker images that have already been loaded into DockerHub as below. You can find the detailed instruction on building a docker images for edge computing [here](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/CreateService.md#build-publish-your-hw)
 
 ![dockerhub images](images/2020/01/dockerhub-images.png)
 
-We will use these for our Edge service rather than spend the time creating new ones.
+We will use one of these for our Edge service rather than spend the time creating new one.
 
 ### Build Edge service metadata
 
@@ -471,42 +567,36 @@ We now need to create some metadata that is used to define our new service to th
 
 ***IMPORTANT***
 
-Make your userid a part of the `service` name to make it unique! I will add my initials `krh` to the `service` name.
+Make your userid a part of the `service` name to make it unique! Add your assigned userid e.g. `user01` to the `service` name.
 
 ```
-cd ~/EdgeLabStudentFiles/smartcart/battery-monitor-service
+cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
 source /etc/default/horizon
-hzn dev service new -s krhcart -i "acmegrocery/battery_amd64"
-Created image generation files in /home/localuser/EdgeLabStudentFiles/battery-monitor-service and horizon metadata files in /home/localuser/EdgeLabStudentFiles/battery-monitor-service/horizon. Edit these files to define and configure your new service.
+hzn dev service new -s user01-service-scale -i "acmegrocery/scales_amd64"
+Created image generation files in /home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service and horizon metadata files in /home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service/horizon. Edit these files to define and configure your new service.
 ```
 You will need to change these generated files - read on!
 
 We have already built the docker images for this exercise and placed them in docker hub. If you want to look at the source code and the build scripts, then look in the `build` directory under each of the service directories.
 
-Modify `hzn.json` to use the appropriate docker image and change the `service.definition.json` file to pick the docker image version that you want to use. If you are going to experiment with service upgrades later in this lab, then start with `v1`, if you are not, then you can use `v1` or `v2`.
+Modify `hzn.json` to use the appropriate docker image and change the `service.definition.json` file to pick the docker image.
 
-![battery_amd64](images/2020/01/battery-amd64.png)
+Later on, if you are going to experiment with service upgrades, you can change the version, now stick with `v1`.
+
+![](2020-01-22-22-17-41.png)
 
 See `hzn.json`
 ```
 {
     "HZN_ORG_ID": "fs20edgem",
     "MetadataVars": {
-        "DOCKER_IMAGE_BASE": "acmegrocery/battery",
-        "SERVICE_NAME": "battery-service",
+        "DOCKER_IMAGE_BASE": "acmegrocery/scales",
+        "SERVICE_NAME": "smartscale-service",
         "SERVICE_VERSION": "1.0.0"
     }
 }
 ```
 and `service.definition.json`
-
-
-RECOPY
-
-Have the battery service already in the hub!
-
-create smartcart and smartscale service with their username included.
-
 
 ```
 {
@@ -523,21 +613,22 @@ create smartcart and smartscale service with their username included.
     "userInput": [],
     "deployment": {
         "services": {
-            "battery-service": {
-                "image": "${DOCKER_IMAGE_BASE}_$ARCH:v1",
+            "smartscale-service": {
+                "image": "${DOCKER_IMAGE_BASE}:v1",
                 "privileged": false
             }
         }
     }
 }
+
 ```
 
 ### Publish our new Edge service
 
-We now need to publish this new service to the Edge Hub and it's attached Edge Devices.
+We now need to publish this new service to the IBM Edge Computing Manager hub
 
 ```
-cd ~/EdgeLabStudentFiles/cart/battery-monitor-service$
+cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
 
 hzn exchange service publish -O -I -f service.definition.json -p service.policy.json -v
 
@@ -561,6 +652,11 @@ smartcart/battery-monitor-service | battery-service              | 1.0.0   | bat
 smartcart/smartcart-service       | <username>smartcart-service  | 1.0.0   | analysis | V1 & V2 | 8081 | 2021      |
 smartscale/smartscale-service     | <username>smartscale-service | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
 ```
+
+We already have the containerised software built and is sitting in DockerHub and earlier in this topic, we created a `service` for this capability. If you skipped this step, then retrace your steps and do it now.
+
+![scales](images/2020/01/scales.png)
+
 
 When complete, have a look in the Edge HUB console and you will see your 3 new Services
 
@@ -682,48 +778,6 @@ At this point we have ...
 1. Defined an Edge Node and attached some properties to it
 2. Defined an Edge Service and attached some constraints to it
 3. Defined an Edge Policy to bind the Node to the Service and looked at the diagnostic evidence.
-
-## Re mission our Edge Device
-
-The scenario here is that we now want to run some `intelligent grocery scales` software on our Edge device rather than just running some software that will just keep track of the items purchase in the shopping trolley.
-
-We already have the containerised software built and is sitting in DockerHub and earlier in this topic, we created a `service` for this capability. If you skipped this step, then retrace your steps and do it now.
-
-![scales](images/2020/01/scales.png)
-
-Look at the `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-node-registration.json` file and you will see that `nodes` registered using this file will have two business purposes.
-
-1. To run a `battery-monitor` service
-2. To run an `image-analysis` service
-
-```
-localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
-{
-    "properties": [   /* A list of policy properties that describe the object. */
-      {"name": "smartscale","value": true},
-      {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
-      {"name": "type", "value": "SmartScale Video Analytics 1000"}
-    ],
-    "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
-  perators AND (&&) or OR (||). */
-      "purpose == battery-monitor OR purpose == image-analysis"
-    ]
-  }
-```
-So now we will re-register our Edge device with these new properties. We have done this earlier, so I will not include the verbose command output here.
-
-`sudo ./agent-install.sh -l 1 -n ../EdgeLabStudentFiles/smartscale/smartscale-node-registration.json`
-
-Check the attributes of the `device` from the console and see how they have changed.
-
-![smartscale properties](images/2020/01/smartscale-properties.png)
-
-Use what you have already learned to create, investigate and diagnose
-
-1. What are the new agreements established between the Edge Server and the Edge Device ?
-2. Why has my `smartcart-service` been removed from my `device` ?
-3. Why is the `battery-service` still running on my `device` ?
-4. How do I upgrade a `service` to use `v2` of my Docker Image rather than `v1` ?
 
 ## Diagnostics - for interest
 
