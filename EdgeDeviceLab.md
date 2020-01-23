@@ -32,7 +32,7 @@
 
 ## WARNING
 
-Stick to the naming convention for all artefacts that you create (adding uxerXX where appropriate) as this is a multi tenant environment. If you do not, this will create problems for you and others.
+Stick to the naming convention for all artefacts that you create (adding userXX where appropriate) as this is a multi tenant environment. If you do not, this will create problems for you and others.
 
 ## Connect to the Edge Hub Environment
 
