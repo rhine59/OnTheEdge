@@ -1,7 +1,6 @@
 # Edge Device Lab
 
-![Edge Computing Title](images/2020/01/edge-computing-title.png)
-
+![Edge Computing Title](images/2020-01-23-21-09-59.png)
 <!-- TOC -->
 
 - [Edge Device Lab](#edge-device-lab)
@@ -279,11 +278,11 @@ hzn agreement list
 ```
 Check in the Hub that your device has been registered OK
 
-![registered device](2020-01-22-14-43-58.png)
+![registered device](images/2020-01-22-14-43-58.png)
 
 Note also that when you explore the device node details from the hub GUI that there are no constraints and we only have simple properties.
 
-![device details](2020-01-22-14-45-11.png)
+![device details](images/2020-01-22-14-45-11.png)
 
 ## Optional - Exploring the Edge Device configuration
 
@@ -441,7 +440,7 @@ Success again - check the details of your node in the Edge Hub GUI and note the 
 
 **NOTE** We could have used the `hzn register` command instead of the `agent-install.sh` command. You will use that method later.
 
-![updated node properties](2020-01-22-15-01-54.png)
+![updated node properties](images/2020-01-22-15-01-54.png)
 
 ## Check deployed services
 
@@ -583,7 +582,7 @@ Modify `hzn.json` to use the appropriate docker image and change the `service.de
 
 Later on, if you are going to experiment with service upgrades, you can change the tags, but for now, stick with `v1`.
 
-![](2020-01-22-22-17-41.png)
+![](images/2020-01-22-22-17-41.png)
 
 Edit `~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon/hzn.json` to match the following content
 <pre>
@@ -669,7 +668,7 @@ We already have the containerised software built and waiting in DockerHub and ea
 
 When complete, have a look in the IBM Edge Computing Manager hub console and you will see your new Service
 
-![three services](2020-01-22-23-00-45.png)
+![three services](images/2020-01-22-23-00-45.png)
 
 ### Create policies to link Device Nodes to Edge Services.
 
@@ -677,15 +676,15 @@ You have created a service definition, now it is time to bind the service to you
 
 Click `userXX-smartscale-service` in the Edge Hub UI. If you cannot find it in the tile view, switch to the list view or use a `Find service` field.
 
-![](2020-01-22-23-06-54.png)
+![](images/2020-01-22-23-06-54.png)
 
 In the service details view, scroll down. Under `Deployment Policies` select `Create Deployment Policy`
 
-![](2020-01-22-23-09-08.png)
+![](images/2020-01-22-23-09-08.png)
 
 Provide some basic details, policy name (make it unique with your userid) and description
 
-![](2020-01-22-23-11-49.png)
+![](images/2020-01-22-23-11-49.png)
 
 after selecting `next` we need to provide the `constraints` that bind the nodes to the services.
 
@@ -709,19 +708,19 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-regi
 
 Select `smartcart` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` `is equal to` `userXX`.
 
-![](2020-01-22-23-14-50.png)
+![](images/2020-01-22-23-14-50.png)
 
 and select `user` ..... `is equal to` ...... `userXX` where `XX` is your userid. In this way, the `service` that you created will now bind to your `node`. Take a minute to understand this.
 
 Just select `Next` to continue
 
-![](2020-01-22-23-15-40.png)
+![](images/2020-01-22-23-15-40.png)
 
 and `Next` again (there is no need to modify anything in this step)
 
 Finally, `Deploy Service`
 
-![](2020-01-22-23-16-46.png)
+![](images/2020-01-22-23-16-46.png)
 
 Now, let's verify if you haven't made any typo :)
 
