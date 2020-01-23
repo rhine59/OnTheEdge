@@ -2,6 +2,8 @@
 
 ![edge computing](images/2020/01/edge-computing.png)
 
+[GitHub Pages](https://rhine59.github.io/OnTheEdge/)
+
 Faststart 2020 lab materials providing an introduction to IBM Edge Computing
 
 <!-- TOC -->
