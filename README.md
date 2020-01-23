@@ -1,7 +1,5 @@
 # OnTheEdge - Edge Computing - FastStart 2020
 
-![policy scale and cart](images/2020/01/policy-scale-and-cart.png)
-
 ![edge computing](images/2020/01/edge-computing.png)
 
 Faststart 2020 lab materials providing an introduction to IBM Edge Computing
