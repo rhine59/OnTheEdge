@@ -9,7 +9,7 @@ Faststart 2020 lab materials providing an introduction to IBM Edge Computing
 - [OnTheEdge - Edge Computing - FastStart 2020](#ontheedge---edge-computing---faststart-2020)
 - [Learning Objectives](#learning-objectives)
 - [Some Advice](#some-advice)
-- [Introductory materials](#introductory-materials)
+- [Introductory & reference materials](#introductory-&-reference-materials)
 - [Assumed prerequisites](#assumed-prerequisites)
 - [Cookbook Index](#cookbook-index)
 - [Optional Activities](#optional-activities)
