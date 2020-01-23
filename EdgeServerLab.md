@@ -29,7 +29,7 @@ Get the address and port from your SkyTap instance and then use `putty` or `ssh`
 
 `https://fs20edgem.169.62.229.212.nip.io:8443`
 
-`admin / grey-hound-red-cardinal`
+Access credentials: `userXX / ReallyStrongPassw0rd`
 
 ## Adding a new Edge Cluster
 
@@ -133,6 +133,6 @@ We have federated our Edge cluster to the MCM Hub cluster. We have tagged the Ed
 
 ## Proof point
 
-# Provide some guidance here.!!!
+You can now deploy a applications remotely to the managed edge cluster. To verify that it works, open the Helm chart catalog in the UI and deploy "checkout" application to your managed edge cluster.
 
-Install a HELM chart on our federated Edge cluster.
+
