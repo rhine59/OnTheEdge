@@ -1,6 +1,6 @@
 # Edge Server Lab
 
-![Edge Computing Title](images/2020/01/edge-computing-title.png)
+![Edge Cluster tutorial](images/2020-01-23-21-29-16.png)
 
 <!-- TOC -->
 
