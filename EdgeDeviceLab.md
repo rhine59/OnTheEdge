@@ -1,7 +1,6 @@
 # Edge Device Lab
 
-![Edge Computing Title](images/2020/01/edge-computing-title.png)
-
+![Edge Computing Title](images/2020-01-23-21-09-59.png)
 <!-- TOC -->
 
 - [Edge Device Lab](#edge-device-lab)
@@ -20,7 +19,7 @@
   - [Congrartulations! Your smartcart device is ready to go!](#congrartulations-your-smartcart-device-is-ready-to-go)
   - [Re-registering the node as smartscale](#re-registering-the-node-as-smartscale)
     - [Build Edge service metadata](#build-edge-service-metadata)
-    - [Publish our new Edge service](#publish-our-new-edge-service)
+    - [Publish the new Edge service](#publish-the-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
     - [Service networking](#service-networking)
     - [Summary](#summary)
@@ -33,13 +32,13 @@
 
 ## WARNING
 
-Use your own naming conventions for all artefacts that you create as this is a multi tenant environment. If you do not, this will create problems for you and others.
+Stick to the naming convention for all artefacts that you create (adding userXX where appropriate) as this is a multi tenant environment. If you do not, this will create problems for you and others.
 
 ## Connect to the Edge Hub Environment
 
-The details of the Edge hub server are here.
+The link to the Edge hub server are here:
 
-[IBM Edge Computing Manager console](https://fs20edgem.169.62.229.212.nip.io:8443/edge#/)
+<a href="https://fs20edgem.169.62.229.212.nip.io:8443/edge#/" target="_blank">IBM Edge Computing Manager console</a>
 
 After you have authenticated to the Edge Hub Server, you will need to navigate to the Edge management console via `Hamburger Menu` > `Edge Computing`
 
@@ -279,11 +278,11 @@ hzn agreement list
 ```
 Check in the Hub that your device has been registered OK
 
-![registered device](2020-01-22-14-43-58.png)
+![registered device](images/2020-01-22-14-43-58.png)
 
 Note also that when you explore the device node details from the hub GUI that there are no constraints and we only have simple properties.
 
-![device details](2020-01-22-14-45-11.png)
+![device details](images/2020-01-22-14-45-11.png)
 
 ## Optional - Exploring the Edge Device configuration
 
@@ -441,7 +440,7 @@ Success again - check the details of your node in the Edge Hub GUI and note the 
 
 **NOTE** We could have used the `hzn register` command instead of the `agent-install.sh` command. You will use that method later.
 
-![updated node properties](2020-01-22-15-01-54.png)
+![updated node properties](images/2020-01-22-15-01-54.png)
 
 ## Check deployed services
 
@@ -583,7 +582,7 @@ Modify `hzn.json` to use the appropriate docker image and change the `service.de
 
 Later on, if you are going to experiment with service upgrades, you can change the tags, but for now, stick with `v1`.
 
-![](2020-01-22-22-17-41.png)
+![](images/2020-01-22-22-17-41.png)
 
 See `hzn.json`
 ```
@@ -591,8 +590,13 @@ See `hzn.json`
     "HZN_ORG_ID": "fs20edgem",
     "MetadataVars": {
         "DOCKER_IMAGE_BASE": "acmegrocery/scales",
+<<<<<<< HEAD
         "SERVICE_NAME": "user01-smartscale-service",
         "SERVICE_VERSION": "1.0.0"
+=======
+        "SERVICE_NAME": "<span style=color:red>user01</span>-smartscale-service",
+        "SERVICE_VERSION": <b>"1.0.0"</b>
+>>>>>>> cbcfac8f1c6f4cf144fadfdc0c28130ed8cbead8
     }
 }
 ```
@@ -613,7 +617,11 @@ and `service.definition.json`
     "userInput": [],
     "deployment": {
         "services": {
+<<<<<<< HEAD
             "user01-smartscale-service": {
+=======
+            "<span style=color:red>user01</span>-smartscale-service": {
+>>>>>>> cbcfac8f1c6f4cf144fadfdc0c28130ed8cbead8
                 "image": "${DOCKER_IMAGE_BASE}:v1",
                 "privileged": false
             }
@@ -621,6 +629,17 @@ and `service.definition.json`
     }
 }
 
+<<<<<<< HEAD
+=======
+</pre>
+
+Make sure that **userXX** matches your userid.
+
+As the service policy does not have to be unique, copy the file that we provided you with the following command
+```
+cp ~/EdgeLabStudentFiles/smartscale/smartscale-service/service.policy.json \
+~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
+>>>>>>> cbcfac8f1c6f4cf144fadfdc0c28130ed8cbead8
 ```
 
 ### Publish our new Edge service
@@ -628,20 +647,22 @@ and `service.definition.json`
 We now need to publish this new service to the IBM Edge Computing Manager hub
 
 ```
-cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
+cd ~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
 
 hzn exchange service publish -O -I -f service.definition.json -p service.policy.json -v
 
 SOME LINES REMOVED BELOW.
 
-Creating user01-smartscale-service_1.0.0_amd64 in the exchange...
+Creating user01-service-scale_1.0.0_amd64 in the exchange...
 If you haven't already, push your docker images to the registry:
   docker push acmegrocery/scales_amd64:v1
-Adding service policy for service: fs20edgem/user01-smartscale-service_1.0.0_amd64
-Updating Service policy  and re-evaluating all agreements based on this Service policy added for service: fs20edgem/user01-smartscale-service_1.0.0_amd64
+Adding service policy for service: fs20edgem/user01-service-scale_1.0.0_amd64
+Updating Service policy  and re-evaluating all agreements based on this Service policy. Existing agreements might be cancelled and re-negotiated.
+Service policy updated.
+Service policy added for service: fs20edgem/user01-service-scale_1.0.0_amd64
 ```
 
-The source for all the services in the the `EdgeLabStudentFiles` directory, both for a `v1` and a `v2` so take a few minutes to explore this material.
+Optionally, you can repeat this process for to create a V2 of the service. You need to publish a `V1` and a `V2` version of the service if you would like to explore upgrading services on Edge Devices.
 
 You may optionally chose to publish a `V1` and a `V2` version of each service if you would like to explore upgrading services on Edge Devices.
 
@@ -649,100 +670,104 @@ You may optionally chose to publish a `V1` and a `V2` version of each service if
 Directory                         | Service                      | Version | Image    | Tags    | Port | Mapped to |
 ----------------------------------|------------------------------|---------|----------|---------|------|-----------|--
 smartcart/battery-monitor-service | battery-service              | 1.0.0   | battery  | V1 & V2 | 8080 | 2020      |
-smartcart/smartcart-service       | smartcart-service            | 1.0.0   | analysis | V1 & V2 | 8081 | 2021      |
-smartscale/smartscale-service     | <username>smartscale-service | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
+smartcart/smartcart-service       | <userXX>-smartcart-service   | 1.0.0   | analysis | V1 & V2 | 8081 | 2021      |
+smartscale/smartscale-service     | <userXX>-smartscale-service  | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
 ```
 
-When complete, have a look in the Edge HUB console and you will see the 3 Services, two had already been created by us, and one you have just created yourself.
+We already have the containerised software built and waiting in DockerHub and earlier in this topic, we created a `service` for this capability. If you skipped this step, then retrace your steps and do it now.
 
-Something like ..
+When complete, have a look in the IBM Edge Computing Manager hub console and you will see your new Service
 
-![three services](images/2020/01/three-new-services.png)
+![three services](images/2020-01-22-23-00-45.png)
 
 ### Create policies to link Device Nodes to Edge Services.
 
-Open your `user01-smartcart-service` from the Edge Hub.
+You have created a service definition, now it is time to bind the service to your device.
 
-Under `Deployment Policies` select `Create Deployment Policy`
+Click `userXX-smartscale-service` in the Edge Hub UI. If you cannot find it in the tile view, switch to the list view or use a `Find service` field.
 
-![smartcart-service](images/2020/01/smartcart-service.png)
+![](images/2020-01-22-23-06-54.png)
 
-Now create a new deployment policy
+In the service details view, scroll down. Under `Deployment Policies` select `Create Deployment Policy`
 
-![create deployment policy](images/2020/01/create-deployment-policy.png)
+![](images/2020-01-22-23-09-08.png)
 
-Provide some basic details.
+Provide some basic details, policy name (make it unique with your userid) and description
 
-![deployment policy details](images/2020/01/deployment-policy-details.png)
+![](images/2020-01-22-23-11-49.png)
 
 after selecting `next` we need to provide the `constraints` that bind the nodes to the services.
 
 Remember the node properties attached to when the node was registered?
 
 ```
-localuser@edge-device:~/EdgeLabStudentFiles/smartcart$ cat smartcart-node-registration.json
+localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
 {
     "properties": [   /* A list of policy properties that describe the object. */
-      {"name": "smartcart","value": true},
+      {"name": "smartscale", "value": true},
       {"name": "user", "value": "userXX"},
       {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
-      {"name": "type", "value": "SmartCart1"}
+      {"name": "type", "value": "SmartScale Video Analytics 1000"}
     ],
     "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
   perators AND (&&) or OR (||). */
-      "purpose == battery-monitor OR purpose == content-monitor"
+      "purpose == battery-monitor OR purpose == image-analysis"
     ]
   }
 ```
 
-Select `smartcart` .... `is equal to` .... `true` as a property.
+Select `smartcart` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` `is equal to` `userXX`.
 
-![smartcart true](images/2020/01/smartcart-true.png)
+![](images/2020-01-22-23-14-50.png)
 
 and select `user` ..... `is equal to` ...... `userXX` where `XX` is your userid. In this way, the `service` that you created will now bind to your `node`. Take a minute to understand this.
 
 Just select `Next` to continue
 
-![policy summary](images/2020/01/policy-summary.png)
+![](images/2020-01-22-23-15-40.png)
 
-and `Next` again.
+and `Next` again (there is no need to modify anything in this step)
 
 Finally, `Deploy Service`
 
-![deploy service](images/2020/01/deploy-service.png)
+![](images/2020-01-22-23-16-46.png)
+
+Now, let's verify if you haven't made any typo :)
+
+On the edge device run `hzn agreement list`.
 
 After the deployment policy has been completed, look at the details. In particular - check that we have a `time` in the `agreement_execution_start_time` value.
 
-As both the `battery` and the `smartcart` services have the same constraints, you will see one agreement for each service for which you have a matching deployment policy.
+As both the `battery` and the `smartscale` services are matching constraints, you will see one agreement for each service for which you have a matching deployment policy.
 
 ```
 localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ hzn agreement list
 [
   {
-    "name": "Policy for fs20edgem/device1 merged with fs20edgem/smartcart_deployment",
-    "current_agreement_id": "d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260",
+    "name": "Policy for fs20edgem/user01device1 merged with fs20edgem/user01-smartscale-deployment",
+    "current_agreement_id": "21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539",
     "consumer_id": "IBM/fs20edgem-agbot",
-    "agreement_creation_time": "2020-01-22 12:14:57 -0800 PST",
-    "agreement_accepted_time": "2020-01-22 12:15:07 -0800 PST",
-    "agreement_finalized_time": "2020-01-22 12:15:07 -0800 PST",
-    "agreement_execution_start_time": "2020-01-22 12:15:09 -0800 PST",
+    "agreement_creation_time": "2020-01-22 14:26:48 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 14:26:58 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 14:26:58 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 14:27:01 -0800 PST",
     "agreement_data_received_time": "",
     "agreement_protocol": "Basic",
     "workload_to_run": {
-      "url": "smartcart-service",
+      "url": "user01-service-scale",
       "org": "fs20edgem",
       "version": "1.0.0",
       "arch": "amd64"
     }
   },
   {
-    "name": "Policy for fs20edgem/device1 merged with fs20edgem/battery_deployment",
-    "current_agreement_id": "0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b",
+    "name": "Policy for fs20edgem/user01device1 merged with fs20edgem/battery_deployment",
+    "current_agreement_id": "02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c",
     "consumer_id": "IBM/fs20edgem-agbot",
-    "agreement_creation_time": "2020-01-22 13:00:21 -0800 PST",
-    "agreement_accepted_time": "2020-01-22 13:00:31 -0800 PST",
-    "agreement_finalized_time": "2020-01-22 13:00:32 -0800 PST",
-    "agreement_execution_start_time": "2020-01-22 13:00:33 -0800 PST",
+    "agreement_creation_time": "2020-01-22 14:33:39 -0800 PST",
+    "agreement_accepted_time": "2020-01-22 14:33:49 -0800 PST",
+    "agreement_finalized_time": "2020-01-22 14:33:50 -0800 PST",
+    "agreement_execution_start_time": "2020-01-22 14:33:52 -0800 PST",
     "agreement_data_received_time": "",
     "agreement_protocol": "Basic",
     "workload_to_run": {
@@ -753,9 +778,8 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ h
     }
   }
 ]
-
 ```
-So we have deployed the `battery` and the `smartcart` services when we initially registered the `device`, but now that we have a new `service` and a new `node` property, we should have 3 services running on the node, and three containers running.
+So we have deployed the `battery` and the `smartcart` services when we initially registered the `device`, but now that we have a new `service` and a new `node` property, we should have `battery` and the `smartscale` running on the node
 
 Use the `hzn`, `docker` `netstat` and `curl` commands to investigate.
 
@@ -763,15 +787,15 @@ Look for the running Docker containers ...
 
 ```
 localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ docker ps
-CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                    NAMES
-7e8532203430        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   11 minutes ago      Up 11 minutes       0.0.0.0:8080->8080/tcp   0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b-battery_service
-7afc6019c0e1        acmegrocery/analysis_amd64:v1   "docker-entrypoint.s…"   About an hour ago   Up About an hour    8081/tcp                 d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260-smartcart-service
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES
+f5a071b31f25        acmegrocery/battery_amd64:v1   "docker-entrypoint.s…"   6 minutes ago       Up 6 minutes        0.0.0.0:8080->8080/tcp   02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c-battery_service
+a7f33de7a84d        acmegrocery/scales_amd64:v1    "docker-entrypoint.s…"   13 minutes ago      Up 13 minutes       8082/tcp                 21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539-user01-smartscale-service
 ```
 You can see above that we have deployed the 2 docker containers associated with our 2 services.
 
 ### Service networking
 
-If you look at the battery container, you see that port `8080` is mapped to all interfaces on the host machine. This means that we can access the battery `service` externally, but NOT the smartcart `service`.
+If you look at the battery container, you see that port `8080` is mapped to all interfaces on the host machine. This means that we can access the battery `service` externally, but NOT the smartscale `service`.
 
 This is controlled in the `service.definition.json` for the `service` in the `deployment` stanza. Have a look [here](https://github.com/open-horizon/anax/blob/master/doc/deployment_string.md) for what else can be controlled.
 
@@ -791,7 +815,7 @@ Connection: keep-alive
 
 V1 battery famous-fun
 
-curl -i localhost:8081
+curl -i localhost:8082
 curl: (7) Failed to connect to localhost port 8081: Connection refused
 ```
 The program source for these containers can be found here.
@@ -800,7 +824,7 @@ The program source for these containers can be found here.
 
 and
 
-[smartcart](https://github.com/rhine59/EdgeLabStudentFiles/tree/master/smartcart/smartcart-service/build)
+[smartscale](https://github.com/rhine59/EdgeLabStudentFiles/tree/master/smartscale/smartscale-service/build)
 
 Take time to understand how we achieved this.
 
@@ -810,26 +834,25 @@ Take some time to investigate and understand the logs.
 
 ```
 localuser@edge-device:~/horizon-edge-packages$ hzn eventlog list
-"2020-01-22 12:14:57:   Node received Proposal message using agreement d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260 for service fs20edgem/smartcart-service from the agbot IBM/fs20edgem-agbot.",
-"2020-01-22 12:15:07:   Agreement reached for service smartcart-service. The agreement id is d11bb67647b2e16a77463c9d9c9b6b6e81aa61e6206c8264b7d130e8bb5ce260.",
-"2020-01-22 12:15:07:   Start dependent services for fs20edgem/smartcart-service.",
-"2020-01-22 12:15:07:   Start workload service for fs20edgem/smartcart-service.",
-"2020-01-22 12:15:08:   Image loaded for fs20edgem/smartcart-service.",
-"2020-01-22 12:15:09:   Workload service containers for fs20edgem/smartcart-service are up and running.",
-"2020-01-22 12:55:50:   Node received Cancel message for fs20edgem/battery-service from agbot IBM/fs20edgem-agbot.",
-"2020-01-22 12:55:50:   Complete terminating agreement for battery-service. Termination reason: agreement bot policy changed",
-"2020-01-22 12:55:51:   Workload destroyed for battery-service",
-"2020-01-22 13:00:21:   Node received Proposal message using agreement 0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
-"2020-01-22 13:00:21:   Node received Proposal message using agreement 1002d133e3f11031fec0059178c4a359f54da7e69ca10d4080f3c5a40fa85c3c for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
-"2020-01-22 13:00:21:   Error handling proposal for service fs20edgem/battery-service. Error: Agreement with TsAndCs (Terms And Conditions) name exists, ignoring proposal.",
-"2020-01-22 13:00:31:   Agreement reached for service battery-service. The agreement id is 0bd38a9bc16d06a698493520cb60be0c583d98853f7c4cfbe0657449202fd37b.",
-"2020-01-22 13:00:31:   Start dependent services for fs20edgem/battery-service.",
-"2020-01-22 13:00:31:   Start workload service for fs20edgem/battery-service.",
-"2020-01-22 13:00:32:   Image loaded for fs20edgem/battery-service.",
-"2020-01-22 13:00:33:   Workload service containers for fs20edgem/battery-service are up and running."
+[
+  "2020-01-22 14:21:03:   Start node configuration/registration for node user01device1.",
+  "2020-01-22 14:21:04:   Complete node configuration/registration for node user01device1.",
+  "2020-01-22 14:26:48:   Node received Proposal message using agreement 21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539 for service fs20edgem/user01-service-scale from the agbot IBM/fs20edgem-agbot.",
+  "2020-01-22 14:26:58:   Agreement reached for service user01-service-scale. The agreement id is 21f41910cb786effcbef605f3ddb4aacc310bbbb4d7e22bad38413df0b479539.",
+  "2020-01-22 14:26:58:   Start dependent services for fs20edgem/user01-service-scale.",
+  "2020-01-22 14:26:58:   Start workload service for fs20edgem/user01-service-scale.",
+  "2020-01-22 14:27:01:   Image loaded for fs20edgem/user01-service-scale.",
+  "2020-01-22 14:27:01:   Workload service containers for fs20edgem/user01-service-scale are up and running.",
+  "2020-01-22 14:33:39:   Node received Proposal message using agreement 02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c for service fs20edgem/battery-service from the agbot IBM/fs20edgem-agbot.",
+  "2020-01-22 14:33:49:   Agreement reached for service battery-service. The agreement id is 02806edc799363d57241776d69d6d386f18dd057024b15d61a0652bf899dcb8c.",
+  "2020-01-22 14:33:49:   Start dependent services for fs20edgem/battery-service.",
+  "2020-01-22 14:33:49:   Start workload service for fs20edgem/battery-service.",
+  "2020-01-22 14:33:51:   Image loaded for fs20edgem/battery-service.",
+  "2020-01-22 14:33:52:   Workload service containers for fs20edgem/battery-service are up and running."
+]
 ```
 
-We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our `battery` and `smartcart` is now running on our Edge `node`
+We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our `battery` and `smartscale` is now running on our Edge `node`
 
 ### Summary
 
