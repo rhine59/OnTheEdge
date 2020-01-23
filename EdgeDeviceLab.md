@@ -38,7 +38,7 @@ Stick to the naming convention for all artefacts that you create (adding userXX 
 
 The link to the Edge hub server are here:
 
-<a href="IBM Edge Computing Manager console" target="_blank">https://fs20edgem.169.62.229.212.nip.io:8443/edge#/</a>
+<a href="https://fs20edgem.169.62.229.212.nip.io:8443/edge#/" target="_blank">IBM Edge Computing Manager console</a>
 
 After you have authenticated to the Edge Hub Server, you will need to navigate to the Edge management console via `Hamburger Menu` > `Edge Computing`
 
