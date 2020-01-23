@@ -39,9 +39,36 @@ There is some latency in these labs, be patient and allow time for your changes 
 
 **Do this now!**
 
-Start both of your SkyTap VMs now to allow them to initialise.
+Verify that both of your SkyTap VMs are started (start them if not to allow them to initialise)
 
-# Introductory materials
+0. [Connecting to the Lab environment](./ConnectToLabEnvrionment.md)
+
+
+# Introduction
+
+If you are totally not familar with IBM Edge Computing Manager and with *edge computing* idea in general, consider spending few minutes on reviewing the materials in the **Introductory & Reference materials** section below. This should help you understand what you are doing in the exercises.
+
+# Assumed prerequisites
+
+1. A Mac or Linux based desktop. If you are a Windows user then find a suitable team member.
+2. Basic command line Linux skills
+
+# Cookbook Index
+
+1. Optional [A Tour of the Edge web console](https://www.ibm.com/cloud/garage/dte/producttour/ibm-edge-computing-product-tour)
+
+2. [Introduction to edge device exercises](./EdgeDeviceStoryboard.md)
+3. [Tutorial for Edge Device Lab](./EdgeDeviceLab.md)
+
+
+4. [Introduction to edge cluster exercises](./EdgeServerStoryboard.md)
+5. [Tutorial for Edge cluster Lab](./EdgeServerLab.md)
+
+# Optional Activities
+
+1. [Building a development environment on your Mac](./BuildingDevEnvironment.md)
+
+# Introductory & Reference materials
 
 [Edge Computing in 2 minutes](https://youtu.be/AF5ZkcnptMs)
 
@@ -61,30 +88,6 @@ Start both of your SkyTap VMs now to allow them to initialise.
 
 [Product manuals](https://www.ibm.com/support/knowledgecenter/SSFKVV_3.2.1/kc_welcome_containers.html)
 
-# Assumed prerequisites
-
-1. A Mac or Linux based desktop. If you are a Windows user then find a suitable team member.
-2. Basic command line Linux skills
-
-# Cookbook Index
-
-0. [Connecting to the Lab environment](./ConnectToLabEnvrionment.md)
-
-1. [A Tour of the Edge web console](https://www.ibm.com/cloud/garage/dte/producttour/ibm-edge-computing-product-tour)
-
-2. [Edge Device Storyboard](./EdgeDeviceStoryboard.md)
-3. [Edge Device Lab](./EdgeDeviceLab.md)
-
-
-4. [Edge Server Storyboard](./EdgeServerStoryboard.md)
-5. [Edge Server Lab](./EdgeServerLab.md)
-
-# Optional Activities
-
-1. [Building a development environment on your Mac](./BuildingDevEnvironment.md)
-
 # ToDo
 
-- Interact with application
-- Connect to Edge server
-- Deploy HELM Chart to Edge Server.
+- mode detailed steps on Deploy HELM Chart to Edge cluster.
