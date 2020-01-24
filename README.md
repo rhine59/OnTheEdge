@@ -62,7 +62,6 @@ If you are totally not familar with IBM Edge Computing Manager and with *edge co
 2. [Introduction to edge device exercises](./EdgeDeviceStoryboard.md)
 3. [Tutorial for Edge Device Lab](./EdgeDeviceLab.md)
 
-
 4. [Introduction to edge cluster exercises](./EdgeServerStoryboard.md)
 5. [Tutorial for Edge cluster Lab](./EdgeServerLab.md)
 
@@ -89,7 +88,3 @@ If you are totally not familar with IBM Edge Computing Manager and with *edge co
 [Edge Installation](https://ibm.box.com/s/pwgvv5du2hji6cick2getbx6108ddbgl)
 
 [Product manuals](https://www.ibm.com/support/knowledgecenter/SSFKVV_3.2.1/kc_welcome_containers.html)
-
-# ToDo
-
-- mode detailed steps on Deploy HELM Chart to Edge cluster.
