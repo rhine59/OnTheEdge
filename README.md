@@ -57,7 +57,7 @@ If you are totally not familar with IBM Edge Computing Manager and with *edge co
 
 # Cookbook Index
 
-1. Optional [A Tour of the Edge web console](https://www.ibm.com/cloud/garage/dte/producttour/ibm-edge-computing-product-tour)
+1. Optional [aA Tour of the Edge web console](https://www.ibm.com/cloud/garage/dte/producttour/ibm-edge-computing-product-tour)
 
 2. [Introduction to edge device exercises](./EdgeDeviceStoryboard.md)
 3. [Tutorial for Edge Device Lab](./EdgeDeviceLab.md)
