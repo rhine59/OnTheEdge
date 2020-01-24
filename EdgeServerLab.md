@@ -12,8 +12,8 @@
   - [Explore the cluster import YAML](#explore-the-cluster-import-yaml)
   - [Generate and execute the Operator CURL Command](#generate-and-execute-the-operator-curl-command)
     - [Observe Operator command progress and results.](#observe-operator-command-progress-and-results)
-  - [Summary](#summary)
   - [Proof point](#proof-point)
+  - [Summary](#summary)
 
 <!-- /TOC -->
 
