@@ -38,7 +38,7 @@ Verify that the environment was started. Click **Launch Lab** link on the left.
 
 If the managed cluster VM is not running start it clicking **Play** button. 
 
-![](2020-01-21-22-45-24.png)
+![](images/2020-01-21-22-45-24.png)
 
 <span style="color:red">**IT IS NOT RECOMMENDED TO USE SKYTAP UI TO CONNECT TO THE MACHINE - YOU WILL USE A TERMINAL CONNECTION DIRECTLY FROM YOUR WORKSTATION**</span>
 
