@@ -125,14 +125,66 @@ Finally look at the available clusters through the Edge Hub GUI and you will see
 
 ![completed import](images/2020/01/completed-cluster-import.png)
 
+## Proof point
+
+From the Hub console, go to the `catalog` option at the top right.
+
+![catalog](images/2020/01/catalog.png)
+
+We are connected to many HELM repositories, so limit the charts to those found in the `acmegrocery-charts`
+
+![acme repository](images/2020/01/acme-repository.png)
+
+Select the `checkout` chart, read the information that comes with the chart and then select `Configure`
+
+![checkout chart](images/2020/01/checkout-chart.png)
+
+Provide options for your `Helm Release Name`, the `Target Namespace` and the `Target Cluster`
+
+Note that you now have a choice of target cluster, so pick the cluster that you have just onboarded `user50` in my case.
+
+![target cluster](images/2020/01/target-cluster.png)
+
+![helm choices](images/2020/01/helm-choices.png)
+
+The select `Install` and installation starts
+
+![installation starts](images/2020/01/installation-starts.png)
+
+Select `View Helm Releases` and this point and you will see our Helm deployment listed.
+
+Note that is has been deployed to our remote `user50` cluster.
+
+![deploy remote cluster](images/2020/01/deploy-remote-cluster.png)
+
+If you connect to the `user50` cluster and look at the running pods, you will see our deployment.
+
+```
+localuser@edge-server:~$ kubectl get pods -n default
+NAME                              READY   STATUS    RESTARTS   AGE
+user50-checkout-847dfd8d9-p679l   1/1     Running   0          2m37s
+localuser@edge-server:~$
+```
+
+What did we really deploy ?
+
+```
+kubectl describe pods user50-checkout-847dfd8d9-p679l -n default
+
+.....
+Events:
+  Type    Reason     Age    From                Message
+  ----    ------     ----   ----                -------
+  Normal  Scheduled  2m14s  default-scheduler   Successfully assigned default/user50-checkout-847dfd8d9-p679l to 10.0.10.1
+  Normal  Pulled     2m13s  kubelet, 10.0.10.1  Container image "nginx:stable" already present on machine
+  Normal  Created    2m13s  kubelet, 10.0.10.1  Created container
+  Normal  Started    2m12s  kubelet, 10.0.10.1  Started container
+```
+
+our old friend `nginx`
+
 This completes this exercise.
 
 ## Summary
 
-We have federated our Edge cluster to the MCM Hub cluster. We have tagged the Edge cluster with labels that represent it's unique characteristics. These can be used to target deployments.
-
-## Proof point
-
-You can now deploy a applications remotely to the managed edge cluster. To verify that it works, open the Helm chart catalog in the UI and deploy "checkout" application to your managed edge cluster.
-
-
+We have federated our Edge cluster to the MCM Hub cluster. We have tagged the Edge cluster with labels that represent it's unique characteristics. We have then deployed a HELM chart to our new federated cluster.
