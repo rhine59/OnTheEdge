@@ -9,6 +9,7 @@ For the FastStart 2020 labs related to the IBM Edge Computing Manager, you will 
 <tr><th>Interface</th><th>Username</th><th>Password</th></tr>
 <tr><td>IBM Edge Computing Manager User Interface</td><td>assigned to you by lab instructor (<b>userXX</b>)</td><td><b>ReallyStrongPassw0rd</b></td></tr>
 <tr><td>edge-server VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
+<tr><td>edge-device VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
 </table>
 
 ## Connecting to the IBM CloudPak for Multicloud Management Hub
@@ -37,7 +38,7 @@ Verify that the environment was started. Click **Launch Lab** link on the left.
 
 If the managed cluster VM is not running start it clicking **Play** button. 
 
-![](2020-01-21-22-45-24.png)
+![](images/2020-01-21-22-45-24.png)
 
 <span style="color:red">**IT IS NOT RECOMMENDED TO USE SKYTAP UI TO CONNECT TO THE MACHINE - YOU WILL USE A TERMINAL CONNECTION DIRECTLY FROM YOUR WORKSTATION**</span>
 
