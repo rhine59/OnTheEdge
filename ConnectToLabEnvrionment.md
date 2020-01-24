@@ -9,6 +9,7 @@ For the FastStart 2020 labs related to the IBM Edge Computing Manager, you will 
 <tr><th>Interface</th><th>Username</th><th>Password</th></tr>
 <tr><td>IBM Edge Computing Manager User Interface</td><td>assigned to you by lab instructor (<b>userXX</b>)</td><td><b>ReallyStrongPassw0rd</b></td></tr>
 <tr><td>edge-server VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
+<tr><td>edge-device VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
 </table>
 
 ## Connecting to the IBM CloudPak for Multicloud Management Hub
