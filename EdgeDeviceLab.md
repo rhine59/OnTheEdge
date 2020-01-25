@@ -1,6 +1,7 @@
 # Edge Device Lab
 
 ![Edge Computing Title](images/2020-01-23-21-09-59.png)
+
 <!-- TOC -->
 
 - [Edge Device Lab](#edge-device-lab)
@@ -16,10 +17,10 @@
   - [Node policies](#node-policies)
   - [Adding cart service properties and constraints to the Edge Device](#adding-cart-service-properties-and-constraints-to-the-edge-device)
   - [Check deployed services](#check-deployed-services)
-  - [Congrartulations! Your smartcart device is ready to go!](#congrartulations-your-smartcart-device-is-ready-to-go)
+  - [Congratulations! Your smartcart device is ready to go!](#congratulations-your-smartcart-device-is-ready-to-go)
   - [Re-registering the node as smartscale](#re-registering-the-node-as-smartscale)
     - [Build Edge service metadata](#build-edge-service-metadata)
-    - [Publish the new Edge service](#publish-the-new-edge-service)
+    - [Publish our new Edge service](#publish-our-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
     - [Service networking](#service-networking)
     - [Summary](#summary)
@@ -38,7 +39,7 @@ Stick to the naming convention for all artefacts that you create (adding userXX 
 
 The link to the Edge hub server are here:
 
-<a href="https://fs20edgem.169.62.229.212.nip.io:8443/edge#/" target="_blank">IBM Edge Computing Manager console</a>
+[IBM Edge Computing Manager console](https://fs20edgem.169.62.229.212.nip.io:8443/edge#/)
 
 After you have authenticated to the Edge Hub Server, you will need to navigate to the Edge management console via `Hamburger Menu` > `Edge Computing`
 
@@ -495,7 +496,7 @@ b9f30198fa16        acmegrocery/analysis_amd64:v1   "docker-entrypoint.s…"   8
 b54f692f2003        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   28 minutes ago      Up 28 minutes       8080/tcp            f1b5a6fcde55da5a31be7392d15950d0c4d1662bd3b082370fdd2092f40454b1-battery_service
 ```
 
-## Congrartulations! Your smartcart device is ready to go!
+## Congratulations! Your smartcart device is ready to go!
 
 Now, let's explore in more details how to build and deploy a service using a smartscale as example. In the real world the smart devices are usually dedicated hardware devices. For our lab we will repurpose the edge-device VM and you will observe
 what happens to agreements and services running on the node.
@@ -590,13 +591,8 @@ See `hzn.json`
     "HZN_ORG_ID": "fs20edgem",
     "MetadataVars": {
         "DOCKER_IMAGE_BASE": "acmegrocery/scales",
-<<<<<<< HEAD
         "SERVICE_NAME": "user01-smartscale-service",
         "SERVICE_VERSION": "1.0.0"
-=======
-        "SERVICE_NAME": "<span style=color:red>user01</span>-smartscale-service",
-        "SERVICE_VERSION": <b>"1.0.0"</b>
->>>>>>> cbcfac8f1c6f4cf144fadfdc0c28130ed8cbead8
     }
 }
 ```
@@ -617,29 +613,22 @@ and `service.definition.json`
     "userInput": [],
     "deployment": {
         "services": {
-<<<<<<< HEAD
             "user01-smartscale-service": {
-=======
-            "<span style=color:red>user01</span>-smartscale-service": {
->>>>>>> cbcfac8f1c6f4cf144fadfdc0c28130ed8cbead8
                 "image": "${DOCKER_IMAGE_BASE}:v1",
                 "privileged": false
             }
         }
     }
 }
-
-<<<<<<< HEAD
-=======
-</pre>
+```
 
 Make sure that **userXX** matches your userid.
 
 As the service policy does not have to be unique, copy the file that we provided you with the following command
+
 ```
 cp ~/EdgeLabStudentFiles/smartscale/smartscale-service/service.policy.json \
 ~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
->>>>>>> cbcfac8f1c6f4cf144fadfdc0c28130ed8cbead8
 ```
 
 ### Publish our new Edge service
@@ -648,7 +637,9 @@ We now need to publish this new service to the IBM Edge Computing Manager hub
 
 ```
 cd ~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
+```
 
+```
 hzn exchange service publish -O -I -f service.definition.json -p service.policy.json -v
 
 SOME LINES REMOVED BELOW.
