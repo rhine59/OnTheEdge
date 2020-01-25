@@ -500,7 +500,7 @@ b54f692f2003        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   2
 Now, let's explore in more details how to build and deploy a service using a smartscale as example. In the real world the smart devices are usually dedicated hardware devices. For our lab we will repurpose the edge-device VM and you will observe
 what happens to agreements and services running on the node.
 
-## Re-registering the node as smartscale
+## Re-registering the node as `smartscale` device
 
 The scenario here is that we now want to run some `intelligent grocery scales` software on our Edge device rather than just running some software that will just keep track of the items purchase in the shopping trolley.
 
