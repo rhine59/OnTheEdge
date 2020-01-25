@@ -30,7 +30,6 @@
     - [Create the new service from a new asset](#create-the-new-service-from-a-new-asset)
 
 <!-- /TOC -->
-
 ## WARNING
 
 Stick to the naming convention for all artefacts that you create (adding userXX where appropriate) as this is a multi tenant environment. If you do not, this will create problems for you and others.
