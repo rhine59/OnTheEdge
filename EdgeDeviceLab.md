@@ -49,7 +49,7 @@ Credentials for the IBM Edge Computing Manager hub server are **userXX / ReallyS
 
 If you haven't done it yet, follow these [instructions](./ConnectToLabEnvrionment.md)
 
-When your `edge-device` is active, then connect via SSH.
+When your `edge-device` is active, then connect via SSH
 
 Credentials for the Edge Device VM are `localuser / passw0rd`
 
