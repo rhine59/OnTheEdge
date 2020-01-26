@@ -1,4 +1,4 @@
-# Edge Device Lab
+  # Edge Device Lab
 
 ![Edge Computing Title](images/2020-01-23-21-09-59.png)
 
@@ -159,7 +159,7 @@ In order to register edge-device VM as a managed edge device you need 2 addition
  Client Version: v3.2.1-1356+71ca70f764a8bac9d98213574e5d20515a231d70
  Server Version: v3.2.1-1356+71ca70f764a8bac9d98213574e5d20515a231d70
  ```
- 
+
 Authenticate to the Kubernetes server hosting the Edge Hub
 
 ```
@@ -553,14 +553,16 @@ Check the attributes of the `device` from the IBM Edge Computing Manager user in
 Use what you have already learned to create, investigate and diagnose
 
 1. What are the new agreements established between the Edge Server and the Edge Device ?
-2. Why has my `smartcart-service` still running on my `device` ?
+2. Why is my `smartcart-service` no longer running on my `device` ?
 3. Why is the `battery-service` still running on my `device` ?
+
+### Building a new smartscale `service`
 
 For the sake of time, we are now going to create new service based on docker images that have already been loaded into DockerHub as below. You can find the detailed instruction on building a docker images for edge computing [here](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/CreateService.md#build-publish-your-hw)
 
 ![dockerhub images](images/2020/01/dockerhub-images.png)
 
-We will use one of these for our Edge service rather than spend the time creating new one.
+We will use the `scales` DockerHub image for our Edge service rather than spend the time creating new one.
 
 ### Build Edge service metadata
 
@@ -581,7 +583,9 @@ We now need to create some metadata that is used to define our new service to th
 
 ***IMPORTANT***
 
-Make your userid a part of the `service` name to make it unique! Add your assigned userid e.g. `user01` to the `service` name.
+Make your userid a part of the `service` name to make it unique! Add your assigned userid e.g. `user01` to the `service` name. There are multiple students using the same Edge Hub server, and you need to identify your service as unique.
+
+The following commands generate template service metadata.
 
 ```
 cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
@@ -605,7 +609,7 @@ See `hzn.json`
     "HZN_ORG_ID": "fs20edgem",
     "MetadataVars": {
         "DOCKER_IMAGE_BASE": "acmegrocery/scales",
-        "SERVICE_NAME": "user01-smartscale-service",
+        "SERVICE_NAME": "userXX-smartscale-service",
         "SERVICE_VERSION": "1.0.0"
     }
 }
@@ -661,7 +665,7 @@ SOME LINES REMOVED BELOW.
 Creating user01-service-scale_1.0.0_amd64 in the exchange...
 If you haven't already, push your docker images to the registry:
   docker push acmegrocery/scales_amd64:v1
-Adding service policy for service: fs20edgem/user01-service-scale_1.0.0_amd64
+Adding service policy for service: fs20edgem/userXX-service-scale_1.0.0_amd64
 Updating Service policy  and re-evaluating all agreements based on this Service policy. Existing agreements might be cancelled and re-negotiated.
 Service policy updated.
 Service policy added for service: fs20edgem/user01-service-scale_1.0.0_amd64
@@ -671,6 +675,8 @@ Optionally, you can repeat this process for to create a V2 of the service. You n
 
 You may optionally chose to publish a `V1` and a `V2` version of each service if you would like to explore upgrading services on Edge Devices.
 
+How would you do this?
+
 ```
 Directory                         | Service                      | Version | Image    | Tags    | Port | Mapped to |
 ----------------------------------|------------------------------|---------|----------|---------|------|-----------|--
@@ -679,9 +685,9 @@ smartcart/smartcart-service       | <userXX>-smartcart-service   | 1.0.0   | ana
 smartscale/smartscale-service     | <userXX>-smartscale-service  | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
 ```
 
-We already have the containerised software built and waiting in DockerHub and earlier in this topic, we created a `service` for this capability. If you skipped this step, then retrace your steps and do it now.
+We already have the V1 and V2 versions of the container images waiting in DockerHub.
 
-When complete, have a look in the IBM Edge Computing Manager hub console and you will see your new Service
+When you have completed building your services, have a look in the IBM Edge Computing Manager hub console and you will see your new Service
 
 ![three services](images/2020-01-22-23-00-45.png)
 
@@ -703,7 +709,7 @@ Provide some basic details, policy name (make it unique with your userid) and de
 
 after selecting `next` we need to provide the `constraints` that bind the nodes to the services.
 
-Remember the node properties attached to when the node was registered?
+Remember the node properties attached to when the node was re registered?
 
 ```
 localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-registration.json
@@ -721,7 +727,9 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-regi
   }
 ```
 
-Select `smartcart` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` `is equal to` `userXX`.
+Select `smartscale` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` .... `is equal to` ..... `userXX`.
+
+spot the deliberate error in the screen capture?
 
 ![](images/2020-01-22-23-14-50.png)
 
@@ -733,7 +741,7 @@ Just select `Next` to continue
 
 and `Next` again (there is no need to modify anything in this step)
 
-Finally, `Deploy Service`
+Finally, `Deploy Service`. (there is that error again in the screen capture!)
 
 ![](images/2020-01-22-23-16-46.png)
 
@@ -743,7 +751,7 @@ On the edge device run `hzn agreement list`.
 
 After the deployment policy has been completed, look at the details. In particular - check that we have a `time` in the `agreement_execution_start_time` value.
 
-As both the `battery` and the `smartscale` services are matching constraints, you will see one agreement for each service for which you have a matching deployment policy.
+As both the `battery` and the `smartscale` services are matching constraints, you will see one agreement for each service for which you have a matching deployment policy - `battery` and `smartscale`
 
 ```
 localuser@edge-device:~/EdgeLabStudentFiles/smartcart/battery-monitor-service$ hzn agreement list
@@ -833,6 +841,24 @@ and
 
 Take time to understand how we achieved this.
 
+This concludes the exercise, but here is some further information to enhance your understanding.
+
+### Summary
+
+At this point we have ...
+
+1. Defined an Edge Node
+2. Attached some properties to our newly defined node.
+3. Observed how 2 services are automatically deployed to this Edge Device
+4. Changed the business purpose of the edge device by changing its properties.
+5. Observed the withdrawal of a service agreement as the device has been re missioned.
+6. Defined a new Edge Service and attached some constraints to it
+7. Defined an Edge Policy to bind the Node to the Service and looked at the diagnostic evidence.
+8. Observed the new business service deployed to the Edge Device. 
+
+
+### Basic diagnostic techniques
+
 What is happening with our Edge node?
 
 Take some time to investigate and understand the logs.
@@ -859,15 +885,7 @@ localuser@edge-device:~/horizon-edge-packages$ hzn eventlog list
 
 We can see from the information above, that we have an `agreement` between the Edge `node` and the `service` and our `battery` and `smartscale` is now running on our Edge `node`
 
-### Summary
-
-At this point we have ...
-
-1. Defined an Edge Node and attached some properties to it
-2. Defined an Edge Service and attached some constraints to it
-3. Defined an Edge Policy to bind the Node to the Service and looked at the diagnostic evidence.
-
-## Diagnostics - for interest
+## More Diagnostics
 
 In my preparation I created a problem as my docker image name in the service definition did not match the docker image available in `DockerHub`
 
@@ -954,7 +972,6 @@ SOME LINES MISSING!
 ![DockerHubBatteryImages](images/2020/01/dockerhubbatteryimages.png)
 
 I had miss tagged my DockerHub `battery` images, missing off the `architecture`. This is the error and is also bad practice as you may want to deploy the edge service to devices of different architecture types.
-
 
 ## Optional background steps
 
