@@ -18,7 +18,7 @@
   - [Adding cart service properties and constraints to the Edge Device](#adding-cart-service-properties-and-constraints-to-the-edge-device)
   - [Check deployed services](#check-deployed-services)
   - [Congratulations! Your smartcart device is ready to go!](#congratulations-your-smartcart-device-is-ready-to-go)
-  - [Re-registering the node as smartscale](#re-registering-the-node-as-smartscale)
+  - [Re-registering the node as `smartscale` device](#re-registering-the-node-as-smartscale-device)
     - [Build Edge service metadata](#build-edge-service-metadata)
     - [Publish our new Edge service](#publish-our-new-edge-service)
     - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
@@ -145,6 +145,21 @@ In order to register edge-device VM as a managed edge device you need 2 addition
 
 `cloudctl` and `kubectl` are already installed in this VM, but if you are working from your own MAC laptop, then you will find the binaries [here](https://169.62.229.212:8443/console/tools/cli). You can of course us your existing workstation if you have the clients installed.
 
+**IMPORTANT: Accidently, there was a wrong version of cloudctl left on the edge-device VM. Before next section, update the cloudctl binary with the following commands:**
+
+ ```
+ curl -kLo cloudctl-linux-amd64-v3.2.1-1356 https://169.62.229.212:8443/api/cli/cloudctl-linux-amd64
+ chmod +x cloudctl-linux-amd64-v3.2.1-1356
+ sudo mv cloudctl-linux-amd64-v3.2.1-1356 /usr/local/bin/cloudctl
+ ```
+
+ You can verify that the 3.2.1 version is installed running
+ ```
+ localuser@edge-device:~$ cloudctl version
+ Client Version: v3.2.1-1356+71ca70f764a8bac9d98213574e5d20515a231d70
+ Server Version: v3.2.1-1356+71ca70f764a8bac9d98213574e5d20515a231d70
+ ```
+ 
 Authenticate to the Kubernetes server hosting the Edge Hub
 
 ```
