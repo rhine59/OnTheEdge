@@ -16,11 +16,13 @@ For the FastStart 2020 labs related to the IBM Edge Computing Manager, you will 
 
 To access the Hub cluster open a browser on your workstation and point it to:
 
-<a href="https://fs20edgem.169.62.229.212.nip.io:8443" target="_blank">https://fs20edgem.169.62.229.212.nip.io:8443</a>
+[Edge Hub Console](https://fs20edgem.169.62.229.212.nip.io:8443)
 
 **ATTENTION: Lab tutorials were tested with Firefox browser.**
 
 ## Connecting to the managed cluster
+
+[SKYTAP - Access your Managed Cluster](Source: https://ibm.biz/fs20skytap)
 
 To access the managed cluster you need a terminal with SSH client. On Mac or Linux workstation use a regular terminal, on Windows use Putty
 
@@ -36,7 +38,7 @@ Verify that the environment was started. Click **Launch Lab** link on the left.
 
 ![](images/2020-01-20-14-16-12.png)
 
-If the managed cluster VM is not running start it clicking **Play** button. 
+If the managed cluster VM is not running start it clicking **Play** button.
 
 ![](images/2020-01-21-22-45-24.png)
 
@@ -92,5 +94,3 @@ For Windows use WinSCP or equivalent tool
     <td>dymaczewski@pl.ibm.com</td>
   </tr>
 </table>
-
-
