@@ -1,8 +1,6 @@
-# OnTheEdge - IBM Edge Application Mnaager - FastStart 2020
+# OnTheEdge - IBM Edge Application Manager - FastStart 2020
 
 ![edge computing](images/2020/01/edge-computing.png)
-
-[GitHub Pages](https://rhine59.github.io/OnTheEdge/)
 
 Faststart 2020 lab materials providing an introduction to IBM Edge Application Manager
 
