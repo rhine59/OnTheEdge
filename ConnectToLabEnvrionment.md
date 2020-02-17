@@ -2,17 +2,19 @@
 
 [Go back to the Table of Contents](./README.md)
 
-For the FastStart 2020 labs related to the IBM Edge Computing Manager, you will be using the central Hub server installed in IBM Cloud. This environment is setup to be multi-tenant where each student has their own userid.  Each student will have their own managed edge cluster in Skytap that you will manage from the centralized Hub server.
+For the labs related to the IBM Edge Application Manager, you will be using the central Hub server installed in IBM Cloud. This environment is setup to be multi-tenant where each student has their own userid.  Each student will have their own managed edge device in Skytap that you will manage from the centralized Hub server.
+
+![](images/2020-02-17-11-35-24.png)
 
 <table border="1">
 <tr><th colspan="3">Access credentials</th></tr>
 <tr><th>Interface</th><th>Username</th><th>Password</th></tr>
-<tr><td>IBM Edge Computing Manager User Interface</td><td>assigned to you by lab instructor (<b>userXX</b>)</td><td><b>ReallyStrongPassw0rd</b></td></tr>
+<tr><td>IBM Edge Application Manager User Interface</td><td>assigned to you by lab instructor (<b>userXX</b>)</td><td><b>ReallyStrongPassw0rd</b></td></tr>
 <tr><td>edge-server VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
 <tr><td>edge-device VM</td><td><b>localuser</b></td><td><b>passw0rd</b></td></tr>
 </table>
 
-## Connecting to the IBM CloudPak for Multicloud Management Hub
+## Connecting to the IBM Edge Application Manager UI
 
 To access the Hub cluster open a browser on your workstation and point it to:
 
@@ -20,11 +22,11 @@ To access the Hub cluster open a browser on your workstation and point it to:
 
 **ATTENTION: Lab tutorials were tested with Firefox browser.**
 
-## Connecting to the managed cluster
+## Connecting to the managed devices
 
-[SKYTAP - Access your Managed Cluster](https://ibm.biz/fs20skytap)
+[SKYTAP - Access your Managed devices](https://ibm.biz/fs20skytap)
 
-To access the managed cluster you need a terminal with SSH client. On Mac or Linux workstation use a regular terminal, on Windows use Putty
+To access the managed devices you need a terminal with SSH client. On Mac or Linux workstation use a regular terminal, on Windows use Putty
 
 Open the Session URL given you by instructor. You should see the form similar to the one shown below:
 
@@ -38,7 +40,7 @@ Verify that the environment was started. Click **Launch Lab** link on the left.
 
 ![](images/2020-01-20-14-16-12.png)
 
-If the managed cluster VM is not running start it clicking **Play** button.
+If the VMs are not running start them clicking **Play** button.
 
 ![](images/2020-01-21-22-45-24.png)
 
@@ -48,7 +50,7 @@ You should see the page that looks like this
 
 ![](images/2020-01-20-13-55-03.png)
 
-Take a note of address and the port number, next to the **edge-server** VM. In above example, it is *services-uscentral.skytap.com* and *12316*. It is the SSH port exposed from the virtal machine for your instance.
+Take a note of address and the port number, next to the **edge-device** VM. In above example, it is *services-uscentral.skytap.com* and *12316*. It is the SSH port exposed from the virtal machine for your instance.
 
 Open the terminal on your workstation. Connect to the VM using user **localuser** with password **passw0rd**
 
@@ -66,9 +68,9 @@ For Windows use putty
 
 ![](images/2020-01-20-15-25-41.png)
 
-## Copying files between your local workstation and managed-cluster
+## Copying files between your local workstation and edge-device
 
-When you need to copy any file between your local workstation and managed-cluster in Skytap, use the following:
+When you need to copy any file between your local workstation and VMs in Skytap, use the following:
 
 For Mac and  Linux
 ```

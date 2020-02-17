@@ -2,49 +2,47 @@
 
 ![Edge Computing Title](images/2020-01-23-21-09-59.png)
 
-<!-- TOC -->
-
-- [Edge Device Lab](#edge-device-lab)
-  - [WARNING](#warning)
-  - [Connect to the Edge Hub Environment](#connect-to-the-edge-hub-environment)
-  - [Connect to the Edge Device environment.](#connect-to-the-edge-device-environment)
-  - [Setup the environment in your Device VM](#setup-the-environment-in-your-device-vm)
-  - [Optionally clean up old deployments](#optionally-clean-up-old-deployments)
-  - [Prepare to register the Edge device.](#prepare-to-register-the-edge-device)
-  - [Register the Edge device.](#register-the-edge-device)
-  - [Optional - Exploring the Edge Device configuration](#optional---exploring-the-edge-device-configuration)
-  - [Defining custom properties, constraints and services.](#defining-custom-properties-constraints-and-services)
-  - [Node policies](#node-policies)
-  - [Adding cart service properties and constraints to the Edge Device](#adding-cart-service-properties-and-constraints-to-the-edge-device)
-  - [Check deployed services](#check-deployed-services)
-  - [Congratulations! Your smartcart device is ready to go!](#congratulations-your-smartcart-device-is-ready-to-go)
-  - [Re-registering the node as `smartscale` device](#re-registering-the-node-as-smartscale-device)
-    - [Build Edge service metadata](#build-edge-service-metadata)
-    - [Publish our new Edge service](#publish-our-new-edge-service)
-    - [Create policies to link Device Nodes to Edge Services.](#create-policies-to-link-device-nodes-to-edge-services)
-    - [Service networking](#service-networking)
-    - [Summary](#summary)
-  - [Diagnostics - for interest](#diagnostics---for-interest)
-  - [Optional background steps](#optional-background-steps)
-    - [Build the applications and push into DockerHub](#build-the-applications-and-push-into-dockerhub)
-    - [Create the new service from a new asset](#create-the-new-service-from-a-new-asset)
-
-<!-- /TOC -->
 ## WARNING
 
 Stick to the naming convention for all artefacts that you create (adding userXX where appropriate) as this is a multi tenant environment. If you do not, this will create problems for you and others.
 
-## Connect to the Edge Hub Environment
+## Edge Device management scenario
 
-The link to the Edge hub server are here:
+Acme Groceries (a retail chain) is deploying a smart cart solution in their locations distributed across the country
+
+There are 2 types of edge devices to be managed:
+
+1. 'Smart shoping carts' (aka smartcarts)
+2. 'Smart scales' for weighting vegetables which automatically detect what is being weighted to apply correct price (smart camera with AI-based visual recognition)
+
+Additionally each store has a server part where the Checkout service is running. Checkout service uses data from smart carts, POS and inventory database 
+
+Basic setup
+
+1. Install IEC edge agent
+2. Register the edge node with specific attributes as SmartCart  (all participant use 1 central IBM Edge Computing Hub)
+3. Verify in UI that node is registered. View the policy that applies `smartcart-service` and `batter-monitor` services to the device SmartCart
+4. Verify that agreement is established and that services (docker containers) runs on the device
+
+Building a new service for Smart Scale devices
+
+5. Define a new service for smartscales  (using existing Docker container)
+6. Define a new policy smartscale-policy that installs new service on the smart scales
+7. Change node attributes from SmartCart to SmartScale (unregister/register) 
+8. Watch workload `smartcart` being removed and workload `smartscale` being run
+
+
+### 1. Connect to the Edge Hub Environment
+
+The link to the Edge hub server is below:
 
 [IBM Edge Computing Manager console](https://fs20edgem.169.62.229.212.nip.io:8443/edge#/)
 
 After you have authenticated to the Edge Hub Server, you will need to navigate to the Edge management console via `Hamburger Menu` > `Edge Computing`
 
-Credentials for the IBM Edge Computing Manager hub server are **userXX / ReallyStrongPassw0rd**. You will be assigned number between 01 and 50 by lab instructors.
+Credentials for the IBM Edge Application Manager hub server are **userXX / ReallyStrongPassw0rd**. You will be assigned number between 01 and 50 by lab instructors.
 
-## Connect to the Edge Device environment.
+### 2. Connect to the Edge Device environment.
 
 If you haven't done it yet, follow these [instructions](./ConnectToLabEnvrionment.md)
 
@@ -59,81 +57,23 @@ From a MAC or Linux run the command similar to the following from a local termin
 **ATTENTION: Remember to use a port number for you instance of edge-defice VM**
 
 ```
-ssh localuser@services-uscentral.skytap.com -p 12366
+ssh localuser@services-uscentral.skytap.com -p <port>
 ```
 
 for Windows users, then [putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) is your friend.
 
+Upon successful login you should see the following prompt
 ```
-macbook:OnTheEdge rhine$ ssh localuser@services-uscentral.skytap.com -p 12366
-The authenticity of host '[services-uscentral.skytap.com]:12366 ([184.170.232.54]:12366)' can't be established.
-ECDSA key fingerprint is SHA256:KJiu6uE/9Wr2MhDxZ73UGZtXSI2A68j/dlMkWtlKR1Y.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '[services-uscentral.skytap.com]:12366,[184.170.232.54]:12366' (ECDSA) to the list of known hosts.
-localuser@services-uscentral.skytap.com's password:
-Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.4.0-159-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
- * Overheard at KubeCon: "microk8s.status just blew my mind".
-
-     https://microk8s.io/docs/commands#microk8s.status
-
-8 packages can be updated.
-8 updates are security updates.
-
-
-Last login: Thu Dec 19 08:13:17 2019 from 91.223.212.205
 localuser@edge-device:~$
 
 ```
 
-## Setup the environment in your Device VM
+### 3. Setup the environment in your Device VM
 
-When you start this exercise, there is no Horizon agent installed on this device, but if you need to reset, then run these following 2 command and this will unregister the node from the Edge server and also remove the agent and it's environment artefacts.
+When you start this exercise, there is no Horizon agent installed on this device, but if you need to reset, then run then 
+go to reset the environment session at the bottom
 
-## Optionally clean up old deployments
-
-So the following 2 steps will not be necessary when you first start but they will do no harm, and you might want to reset your environment later in the lab.
-
-1. Unregister the agent from the Edge Hub
-
-```
-hzn unregister -D -r
-
-Are you sure you want to unregister this Horizon node? [y/N]: y
-Unregistering this node, cancelling all agreements, stopping all workloads, and restarting Horizon...
-Waiting for Horizon node unregister to complete: No Timeout specified ...
-Checking the node configuration state...
-Horizon node unregistered. You may now run 'hzn register ...' again, if desired.
-```
-2. Remove the agent environment.
-
-```
-ocaluser@edge-device:~/horizon-edge-packages$ sudo ./uninstall.sh
-[sudo] password for localuser:
-*INFO* Start
-*INFO* removing bluehorizon horizon-cli and the agent default values.
-*INFO* also resetting the agent configuration to its base values
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-Package 'bluehorizon' is not installed, so not removed
-0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
-*INFO* removed horizon-cli RC 0
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-Package 'horizon-cli' is not installed, so not removed
-0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
-*INFO* removed horizon-cli RC 0
-*INFO* removing /etc/default/horizon, resetting agent-install.cfg and removing the Edge Hub Certificate
-rm: cannot remove '/etc/default/horizon': No such file or directory
-*INFO* Done
-```
-## Prepare to register the Edge device.
+### 4. Prepare to register the Edge device.
 
 Follow the instruction working in the terminal window connected to the edge-device VM.
 
@@ -141,35 +81,26 @@ Binaries for the edge device agent are already copied to your device, you can fi
 
 In order to register edge-device VM as a managed edge device you need 2 additional items:
 - api key
-- CA certificate for the IBM Edge Computing Manager hub environment
+- CA certificate for the IBM Edge Application Manager hub environment
 
 `cloudctl` and `kubectl` are already installed in this VM, but if you are working from your own MAC laptop, then you will find the binaries [here](https://169.62.229.212:8443/console/tools/cli). You can of course us your existing workstation if you have the clients installed.
-
-**IMPORTANT: Accidently, there was a wrong version of cloudctl left on the edge-device VM. Before next section, update the cloudctl binary with the following commands:**
-
- ```
- curl -kLo cloudctl-linux-amd64-v3.2.1-1356 https://169.62.229.212:8443/api/cli/cloudctl-linux-amd64
- chmod +x cloudctl-linux-amd64-v3.2.1-1356
- sudo mv cloudctl-linux-amd64-v3.2.1-1356 /usr/local/bin/cloudctl
- ```
-
- You can verify that the 3.2.1 version is installed running
- ```
- localuser@edge-device:~$ cloudctl version
- Client Version: v3.2.1-1356+71ca70f764a8bac9d98213574e5d20515a231d70
- Server Version: v3.2.1-1356+71ca70f764a8bac9d98213574e5d20515a231d70
- ```
 
 Authenticate to the Kubernetes server hosting the Edge Hub
 
 ```
-localuser@edge-device:~$ cloudctl login -a  https://fs20edgem.169.62.229.212.nip.io:8443 -u user01 -p ReallyStrongPassw0rd --skip-ssl-validation -n user01
+cloudctl login -a  https://fs20edgem.169.62.229.212.nip.io:8443 -u <userXX> \
+-p ReallyStrongPassw0rd --skip-ssl-validation -n <userXX>
+```
+
+The output should look like
+
+```
 Authenticating...
 OK
 
 Targeted account fs20edgem Account (id-fs20edgem-account)
 
-Targeted namespace team01
+Targeted namespace user01
 
 Configuring kubectl ...
 Property "clusters.fs20edgem" unset.
@@ -185,10 +116,16 @@ Configuring helm: /home/localuser/.helm
 OK
 
 ```
+
 We need to generate a Kubernetes API key that will be used when the horizon agent connects to the hub. Make your key name unique as this is a multi tenant environment.
 
 ```
-cloudctl iam api-key-create user01 -d "FastStart 2020 Edge User01 API Key" -f edge-api-key
+cloudctl iam api-key-create <userXX> -d "FastStart 2020 Edge UserXX API Key" -f edge-api-key
+```
+
+The output should look like below
+
+```
 Creating API key user01 as user01...
 OK
 API key user01 created
@@ -213,7 +150,7 @@ e.g.
 HZN_EXCHANGE_USER_AUTH=iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 ```
 
-Get a certificate from the Edge hub and make it available to agent commands. This certificate is used in the communication from the Edge device agent to the Edge Hub.
+Get a certificate from the Edge hub and make it available to agent commands. This certificate is used for SSL communication from the Edge device agent to the Edge Hub.
 
 ```
 kubectl --namespace kube-system get secret cluster-ca-cert -o jsonpath="{.data['tls\.crt']}" | \
@@ -224,7 +161,6 @@ Add a `HZN_DEVICE_ID` variable value to `agent-install.cfg` and make it unique, 
 When you are ready to register the device to the hub, your `agent-install.cfg` should look something like ...
 
 ```
-localuser@edge-device:~/horizon-edge-packages$ cat agent-install.cfg
 HZN_EXCHANGE_URL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-exchange/v1
 HZN_FSS_CSSURL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-css
 HZN_ORG_ID=fs20edgem
@@ -237,7 +173,7 @@ copy this file to `/etc/default/horizon` to provide system wide defaults.
 
 `sudo cp agent-install.cfg /etc/default/horizon`
 
-## Register the Edge device.
+### 5. Register the Edge device.
 
 The variable values for the installation are provided from the `agent-install.cfg` file, but you can control the installation as follows if required.
 
@@ -260,9 +196,11 @@ We just looking for critical errors at installation time so we will use minimal 
 
 ```
 sudo ./agent-install.sh -l 1
+```
 
-EXTRACT FOLLOWS, SOME LINES DELETED
+The output should look like below (some lines deleted)
 
+```
 2020-01-10 05:48:23 the service is not ready, will retry in 1 second
 2020-01-10 05:48:24 The service is ready
 2020-01-10 05:48:24 Generated node token is
@@ -299,11 +237,9 @@ Note also that when you explore the device node details from the hub GUI that th
 
 ![device details](images/2020-01-22-14-45-11.png)
 
-## Optional - Exploring the Edge Device configuration
+### Optional - Exploring the Edge Device installation packages
 
 Agent installation packages
-
-`tree` is not installed by default. If you need it, then `sudo apt install -y tree` will complete an installation.
 
 ```
 cd /home/localuser/horizon-edge-packages
@@ -338,22 +274,12 @@ localuser@edge-device:~/horizon-edge-packages$ tree
 │   └── horizon-cli.crt
 ├── README.md
 └── set_env.sh
-
-```
-explore the `agent-install.cfg` file for the details of the Edge Management server connection. Yours may be different in the lab environment you are using.
-
-```
-localuser@edge-device:~/horizon-edge-packages$ cat agent-install.cfg
-HZN_EXCHANGE_URL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-exchange/v1
-HZN_FSS_CSSURL=https://fs20edgem.169.62.229.212.nip.io:8443/ec-css
-HZN_ORG_ID=fs20edgem
-HZN_DEVICE_ID=user01device1
-HZN_EXCHANGE_USER_AUTH=iamapikey:iX0hMrFw9xlN4m1E9XQC6-MDBLsQdu9PVeHm-I9Vwji9
 ```
 
 We use the Horizon client to interact with our Edge device and it's relationship with the Edge server.
 
-Q. What is the status of our edge infrastructure deployment?
+To check the status of our edge deployment run `hzn status`
+
 ```
 localuser@edge-device:~/horizon-edge-packages$ hzn status|grep -i status
       "status": "terminated",
@@ -373,7 +299,6 @@ localuser@edge-device:~/horizon-edge-packages$ hzn status|grep -i status
       "status": "initialized",
       "subworker_status": {}
 ```
-A. All is well.
 
 Q. What `agreements` do we have between the `IBM Edge Computing Manager hub` and the `edge device`?
 ```
@@ -383,7 +308,7 @@ localuser@edge-device:~/horizon-edge-packages$
 ```
 A. No agreements shown above as there are no negotiated contracts between node and the hub.
 
-## Defining custom properties, constraints and services.
+### 5. Defining custom properties, constraints and services.
 
 Now we are going to add some properties and constraints to the device node and use them to bind them to some new services.
 
@@ -396,9 +321,11 @@ Cloning into 'EdgeLabStudentFiles'...
 
 ## Node policies
 
-## Adding cart service properties and constraints to the Edge Device
+### 6. Adding cart service properties and constraints to the Edge Device
 
-You will use the installation script again, so there is no need to unregister the device first (agent-install.sh does it for you), just run the script again using the new JSON node policy file as a parameter.
+In this step you will register the node with additional properties - e.g. device type. Node properties (node policy) are defined as a JSON file.
+
+You will use the installation script again, so there is no need to unregister the device first (agent-install.sh does it for you), just run the script again using the JSON node policy file as a parameter.
 
 `cd ~/horizon-edge-packages`
 
@@ -409,7 +336,7 @@ You can use your own `location` property value.
 {
     "properties": [   /* A list of policy properties that describe the object. */
       {"name": "smartcart","value": true},
-      {"name": "location", "value": "Obornicka 127, 62-002 Suchy Las, Poland"},
+      {"name": "location", "value": "3801 S Las Vegas Blvd, NV 89109, USA"},
       {"name": "type", "value": "SmartCart1"}
     ],
     "constraints": [  /* A list of constraint expressions of the form <property name> <operator> <property value>, separated by boolean o
@@ -418,6 +345,13 @@ You can use your own `location` property value.
     ]
   }
 ```
+
+Nodes registered using this file will have two business purposes.
+
+1. To run a `battery-monitor` service
+2. To run an `content-monitor` service
+
+
 Now re-register the device with these properties.
 
 `sudo ./agent-install.sh -l 1 -n ../EdgeLabStudentFiles/smartcart/smartcart-node-registration.json`
@@ -451,13 +385,14 @@ Updating the node policy...
 Initializing the Horizon node...
 Horizon node is registered. Workload agreement negotiation should begin shortly. Run 'hzn agreement list' to view.
 ```
+
 Success again - check the details of your node in the Edge Hub GUI and note the `properties ` and `constraints`
 
-**NOTE** We could have used the `hzn register` command instead of the `agent-install.sh` command. You will use that method later.
+**NOTE** In real life you probably wouln't keep installation script on the edge devie - the same can be achieved using the `hzn register` command instead of the `agent-install.sh` script.
 
 ![updated node properties](images/2020-01-22-15-01-54.png)
 
-## Check deployed services
+### 7. Check deployed services
 
 Now, verify what services are running on the device.
 
@@ -515,9 +450,7 @@ b54f692f2003        acmegrocery/battery_amd64:v1    "docker-entrypoint.s…"   2
 Now, let's explore in more details how to build and deploy a service using a smartscale as example. In the real world the smart devices are usually dedicated hardware devices. For our lab we will repurpose the edge-device VM and you will observe
 what happens to agreements and services running on the node.
 
-## Re-registering the node as `smartscale` device
-
-The scenario here is that we now want to run some `intelligent grocery scales` software on our Edge device rather than just running some software that will just keep track of the items purchase in the shopping trolley.
+###  7. Re-registering the node as `smartscale` device
 
 Look at the `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-node-registration.json` file and you will see that `nodes` registered using this file will have two business purposes.
 
@@ -556,7 +489,7 @@ Use what you have already learned to create, investigate and diagnose
 2. Why is my `smartcart-service` no longer running on my `device` ?
 3. Why is the `battery-service` still running on my `device` ?
 
-### Building a new smartscale `service`
+## Building a new smartscale `service`
 
 For the sake of time, we are now going to create new service based on docker images that have already been loaded into DockerHub as below. You can find the detailed instruction on building a docker images for edge computing [here](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/CreateService.md#build-publish-your-hw)
 
@@ -564,7 +497,7 @@ For the sake of time, we are now going to create new service based on docker ima
 
 We will use the `scales` DockerHub image for our Edge service rather than spend the time creating new one.
 
-### Build Edge service metadata
+### 8. Build Edge service metadata
 
 Create a key pair so that we can sign our work. These can be anything you require, so suggest that you use `fs20edgem` and `<your_userid>` in the place of `organisation` and `unit.`
 
@@ -585,38 +518,32 @@ We now need to create some metadata that is used to define our new service to th
 
 Make your userid a part of the `service` name to make it unique! Add your assigned userid e.g. `user01` to the `service` name. There are multiple students using the same Edge Hub server, and you need to identify your service as unique.
 
-The following commands generate template service metadata.
+To generate a service metadata file you can use `hzn dev service new` command. However for the sake of time we have already did it for you. Explore the generated files in `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service` and horizon metadata files in `/home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service/horizon`. 
 
-```
-cd ~/EdgeLabStudentFiles/smartscale/smartscale-service
-source /etc/default/horizon
-hzn dev service new -s user01-smartscale-service -i "acmegrocery/scales_amd64"
-Created image generation files in /home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service and horizon metadata files in /home/localuser/EdgeLabStudentFiles/smartscale/smartscale-service/horizon. Edit these files to define and configure your new service.
-```
 You will need to change these generated files - read on!
 
 We have already built the docker images for this exercise and placed them in docker hub. If you want to look at the source code and the build scripts, then look in the `build` directory under each of the service directories.
 
-Modify `hzn.json` to use the appropriate docker image and change the `service.definition.json` file to pick the docker image tag.
+Look at `hzn.json` and `service.definition.json`.
 
 Later on, if you are going to experiment with service upgrades, you can change the tags, but for now, stick with `v1`.
 
 ![](images/2020-01-22-22-17-41.png)
 
 See `hzn.json`
-```
+<pre>
 {
     "HZN_ORG_ID": "fs20edgem",
     "MetadataVars": {
         "DOCKER_IMAGE_BASE": "acmegrocery/scales",
-        "SERVICE_NAME": "userXX-smartscale-service",
+        "SERVICE_NAME": <span style="color:red">"userXX-smartscale-service"</span>,
         "SERVICE_VERSION": "1.0.0"
     }
 }
-```
+</pre>
 and `service.definition.json`
 
-```
+</pre>
 {
     "org": "$HZN_ORG_ID",
     "label": "$SERVICE_NAME for $ARCH",
@@ -631,37 +558,28 @@ and `service.definition.json`
     "userInput": [],
     "deployment": {
         "services": {
-            "user01-smartscale-service": {
+            <span style="color:red">"userXX-smartscale-service"</span>: {
                 "image": "${DOCKER_IMAGE_BASE}:v1",
                 "privileged": false
             }
         }
     }
 }
-```
+</pre>
 
 Make sure that **userXX** matches your userid.
 
-As the service policy does not have to be unique, copy the file that we provided you with the following command
+### 9. Publish the new Edge service
 
-```
-cp ~/EdgeLabStudentFiles/smartscale/smartscale-service/service.policy.json \
-~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
-```
-
-### Publish our new Edge service
-
-We now need to publish this new service to the IBM Edge Computing Manager hub
+We now need to publish this new service to the IBM Edge Application Manager hub
 
 ```
 cd ~/EdgeLabStudentFiles/smartscale/smartscale-service/horizon
-```
-
-```
 hzn exchange service publish -O -I -f service.definition.json -p service.policy.json -v
+```
+Output should lokk like below:
 
-SOME LINES REMOVED BELOW.
-
+```
 Creating user01-service-scale_1.0.0_amd64 in the exchange...
 If you haven't already, push your docker images to the registry:
   docker push acmegrocery/scales_amd64:v1
@@ -671,27 +589,13 @@ Service policy updated.
 Service policy added for service: fs20edgem/user01-service-scale_1.0.0_amd64
 ```
 
-Optionally, you can repeat this process for to create a V2 of the service. You need to publish a `V1` and a `V2` version of the service if you would like to explore upgrading services on Edge Devices.
+You may optionally chose to publish a `V1` and a `V2` version of each service if you would like to explore upgrading services on Edge Devices. (We already have the V1 and V2 versions of the container images waiting in DockerHub)
 
-You may optionally chose to publish a `V1` and a `V2` version of each service if you would like to explore upgrading services on Edge Devices.
-
-How would you do this?
-
-```
-Directory                         | Service                      | Version | Image    | Tags    | Port | Mapped to |
-----------------------------------|------------------------------|---------|----------|---------|------|-----------|--
-smartcart/battery-monitor-service | battery-service              | 1.0.0   | battery  | V1 & V2 | 8080 | 2020      |
-smartcart/smartcart-service       | <userXX>-smartcart-service   | 1.0.0   | analysis | V1 & V2 | 8081 | 2021      |
-smartscale/smartscale-service     | <userXX>-smartscale-service  | 1.0.0   | scales   | V1 & V2 | 8082 | 2022      |
-```
-
-We already have the V1 and V2 versions of the container images waiting in DockerHub.
-
-When you have completed building your services, have a look in the IBM Edge Computing Manager hub console and you will see your new Service
+When you have completed building your services, have a look in the IBM Edge Appliocation Manager hub console and you will see your new Service
 
 ![three services](images/2020-01-22-23-00-45.png)
 
-### Create policies to link Device Nodes to Edge Services.
+### 10. Create policy to link Device Nodes to Edge Services.
 
 You have created a service definition, now it is time to bind the service to your device.
 
@@ -729,7 +633,7 @@ localuser@edge-device:~/EdgeLabStudentFiles/smartscale$ cat smartscale-node-regi
 
 Select `smartscale` .... `is equal to` .... `true` as a property. Click `+` sign and add also `user` .... `is equal to` ..... `userXX`.
 
-spot the deliberate error in the screen capture?
+Can you spot the deliberate error in the screen capture? (*HINT Look at the properties names*)
 
 ![](images/2020-01-22-23-14-50.png)
 
@@ -741,7 +645,7 @@ Just select `Next` to continue
 
 and `Next` again (there is no need to modify anything in this step)
 
-Finally, `Deploy Service`. (there is that error again in the screen capture!)
+Finally, `Deploy Service`. 
 
 ![](images/2020-01-22-23-16-46.png)
 
@@ -856,6 +760,46 @@ At this point we have ...
 7. Defined an Edge Policy to bind the Node to the Service and looked at the diagnostic evidence.
 8. Observed the new business service deployed to the Edge Device. 
 
+### Reset the edge device
+
+If you want to start from scratch run the following steps.
+
+1. Unregister the agent from the Edge Hub
+
+```
+hzn unregister -D -r
+
+Are you sure you want to unregister this Horizon node? [y/N]: y
+Unregistering this node, cancelling all agreements, stopping all workloads, and restarting Horizon...
+Waiting for Horizon node unregister to complete: No Timeout specified ...
+Checking the node configuration state...
+Horizon node unregistered. You may now run 'hzn register ...' again, if desired.
+```
+2. Remove the agent environment.
+
+```
+localuser@edge-device:~/horizon-edge-packages$ sudo ./uninstall.sh
+
+[sudo] password for localuser:
+*INFO* Start
+*INFO* removing bluehorizon horizon-cli and the agent default values.
+*INFO* also resetting the agent configuration to its base values
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Package 'bluehorizon' is not installed, so not removed
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+*INFO* removed horizon-cli RC 0
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Package 'horizon-cli' is not installed, so not removed
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+*INFO* removed horizon-cli RC 0
+*INFO* removing /etc/default/horizon, resetting agent-install.cfg and removing the Edge Hub Certificate
+rm: cannot remove '/etc/default/horizon': No such file or directory
+*INFO* Done
+```
 
 ### Basic diagnostic techniques
 
