@@ -25,6 +25,7 @@ To access the Hub cluster open a browser on your workstation and point it to:
 ## Connecting to the managed devices
 
 [SKYTAP - Access your Managed devices](https://ibm.biz/fs20skytap)
+[SKYTAP - Access your Managed Cluster](Source: https://ibm.biz/fs20skytap)
 
 To access the managed devices you need a terminal with SSH client. On Mac or Linux workstation use a regular terminal, on Windows use Putty
 
